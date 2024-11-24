@@ -8,7 +8,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello, RecoSphere!',
+    hello: () => 'Hello, RecoSphere!!',
   },
 };
 

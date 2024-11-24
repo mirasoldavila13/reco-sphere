@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 4000;
 
 async function startServer() {
   try {
-    // Connect to MongoDB using  db.js
+    // Connect to MongoDB using db.js
     await connectDB(MONGODB_URI);
 
     const server = new ApolloServer({ typeDefs, resolvers });

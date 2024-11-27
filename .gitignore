@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules/
+backend/node_modules/.package-lock.json
 dist
 dist-ssr
 *.local
@@ -25,3 +26,6 @@ dist-ssr
 
 # Environment Variables
 .env
+
+# application.properties
+microservice/src/main/resources/application.properties

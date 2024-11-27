@@ -14,7 +14,7 @@
     "start:backend:dev": "cd backend && nodemon server.js",
     "start:frontend": "cd frontend && npm run preview",
     "start:frontend:dev": "cd frontend && npm run dev",
-    "start:microservice": "cd microservice && ./mvnw spring-boot:run",
+    "start:microservice": "cd microservice && mvnw.cmd spring-boot:run",
     "build": "npm-run-all build:frontend",
     "build:frontend": "cd frontend && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"

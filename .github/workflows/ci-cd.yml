@@ -1,0 +1,142 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Frontend Workflow
+  frontend:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: |
+          cd frontend
+          npm install
+
+      # Step 4: Lint frontend
+      - name: Lint Frontend
+        run: |
+          cd frontend
+          npm run lint
+
+      # Step 5: Build frontend
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm run build
+
+      # Step 6: Test frontend (integrate later)
+      - name: Test Frontend
+        run: |
+          cd frontend
+          npm test
+
+  # Backend Workflow
+  backend:
+    name: Backend CI
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: |
+          cd backend
+          npm install
+
+      # Step 4: Lint backend
+      - name: Lint Backend
+        run: |
+          cd backend
+          npm run lint
+
+      # Step 5: Test backend
+      - name: Test Backend
+        run: |
+          cd backend
+          npm test
+
+  # Microservice Workflow
+  microservice:
+    name: Microservice CI
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Java
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      # Step 3: Build microservice
+      - name: Build Microservice
+        run: |
+          cd microservice
+          ./mvnw clean install
+
+      # Step 4: Test microservice
+      - name: Test Microservice
+        run: |
+          cd microservice
+          ./mvnw test
+
+  # Deployment Workflow (Placeholder for now)
+  deploy:
+    name: Deployment CI/CD
+    needs: [frontend, backend, microservice]
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Placeholder Deployment for Frontend
+      - name: Deploy Frontend
+        if: success()
+        run: |
+          echo "Frontend deployment placeholder. Replace with actual deployment script."
+
+      # Placeholder Deployment for Backend
+      - name: Deploy Backend
+        if: success()
+        run: |
+          echo "Backend deployment placeholder. Replace with actual deployment script."
+
+      # Placeholder Deployment for Microservice
+      - name: Deploy Microservice
+        if: success()
+        run: |
+          echo "Microservice deployment placeholder. Replace with actual deployment script."

@@ -1,0 +1,39 @@
+{
+  "name": "reco-sphere",
+  "version": "1.0.0",
+  "description": "Reco-Sphere is a full-stack application that provides personalized content recommendations using Spring Boot microservices, a Node.js backend with Apollo GraphQL, and a React-based frontend.",
+  "main": "index.js",
+  "scripts": {
+    "install": "npm-run-all install:backend install:frontend",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:microservice": "cd microservice && ./mvnw clean install",
+    "start": "npm run build:frontend && npm-run-all --parallel start:backend start:frontend start:microservice",
+    "start:dev": "concurrently \"npm run start:backend:dev\" \"npm run start:frontend:dev\" \"npm run start:microservice\"",
+    "start:backend": "cd backend && npm start",
+    "start:backend:dev": "cd backend && nodemon server.js",
+    "start:frontend": "cd frontend && npm run preview",
+    "start:frontend:dev": "cd frontend && npm run dev",
+    "start:microservice": "cd microservice && ./mvnw spring-boot:run",
+    "build": "npm-run-all build:frontend",
+    "build:frontend": "cd frontend && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "recommendation",
+    "spring-boot",
+    "microservice",
+    "graphql",
+    "vite",
+    "node.js",
+    "react",
+    "typescript"
+  ],
+  "author": "Mirasol Davila",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^3.1.7",
+    "npm-run-all": "^4.1.5"
+  }
+}

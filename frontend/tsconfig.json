@@ -3,5 +3,16 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "types": ["jest", "node", "@testing-library/jest-dom"], 
+    "lib": ["dom", "es2020"], 
+    "moduleResolution": "node", 
+    "jsx": "react-jsx", 
+    "esModuleInterop": true, 
+    "allowSyntheticDefaultImports": true, 
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true 
+  }
 }

@@ -2,36 +2,36 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleResize = () => {
+    if (window.innerWidth >= 768) {
+      setMenuOpen(false);
+      setIsMobile(false);
+    } else {
+      setIsMobile(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
     };
+  }, []);
 
-    const handleResize = () => {
-        if (window.innerWidth >= 768) {
-            setMenuOpen(false);
-            setIsMobile(false);
-        } else {
-            setIsMobile(true);
-        }
-    };
-
-    useEffect(() => {
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
-
-    return (
-        <header className="bg-neutral text-text fixed top-0 left-0 w-full z-50 shadow-md">
-            <nav className="flex justify-between items-center py-4 px-4">
-                {/* RecoSphere Logo Section*/}
-                <div className="flex items-center">
-                    <Link to="/" className="flex items-center space-x-3">
-                        {/* <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg">
+  return (
+    <header className="bg-neutral text-text fixed top-0 left-0 w-full z-50 shadow-md">
+      <nav className="flex justify-between items-center py-4 px-4">
+        {/* RecoSphere Logo Section*/}
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center space-x-3">
+            {/* <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -48,56 +48,58 @@ const Navbar = () => {
                                 />
                             </svg>
                         </div> */}
-                        <h1 className="text-2xl font-bold">
-                            <span className="text-primary">Reco</span>
-                            <span className="text-white">Sphere</span>
-                        </h1>
-                    </Link>
-                </div>
+            <h1 className="text-2xl font-bold">
+              <span className="text-primary">Reco</span>
+              <span className="text-white">Sphere</span>
+            </h1>
+          </Link>
+        </div>
 
-                {/* Buttons for Desktop */}
-                <div className="hidden md:flex space-x-4 ml-auto">
-                    <Link to="/login" className="btn btn-outline hover:bg-primary">
-                        Login
-                    </Link>
-                    <Link to="/register" className="btn btn-primary hover:bg-secondary">
-                        Sign Up
-                    </Link>
-                </div>
+        {/* Buttons for Desktop */}
+        <div className="hidden md:flex space-x-4 ml-auto">
+          <Link to="/login" className="btn btn-outline hover:bg-primary">
+            Login
+          </Link>
+          <Link to="/register" className="btn btn-primary hover:bg-secondary">
+            Sign Up
+          </Link>
+        </div>
 
-                {/* Hamburger Button */}
-                <button
-                    className="block md:hidden focus:outline-none ml-auto"
-                    onClick={toggleMenu}
-                >
-                    <div className="flex flex-col items-center justify-center w-6 h-6 space-y-1">
-                        <span className="block w-full h-0.5 bg-white"></span>
-                        <span className="block w-full h-0.5 bg-white"></span>
-                        <span className="block w-full h-0.5 bg-white"></span>
-                    </div>
-                </button>
-            </nav>
+        {/* Hamburger Button */}
+        <button
+          className="block md:hidden focus:outline-none ml-auto"
+          onClick={toggleMenu}
+        >
+          <div className="flex flex-col items-center justify-center w-6 h-6 space-y-1">
+            <span className="block w-full h-0.5 bg-white"></span>
+            <span className="block w-full h-0.5 bg-white"></span>
+            <span className="block w-full h-0.5 bg-white"></span>
+          </div>
+        </button>
+      </nav>
 
-            {/* Mobile Menu */}
-            {menuOpen && isMobile && (
-                <div className="absolute top-16 left-0 w-full bg-neutral py-4">
-                    <ul className="flex flex-col items-center space-y-4 text-white">
-                        <li>
-                            <Link to="/login" className="btn btn-outline hover:bg-primary">
-                                Login
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/register" className="btn btn-primary !text-white !hover:text-white bg-primary hover:bg-secondary">
-                                Sign Up
-                            </Link>
-
-                        </li>
-                    </ul>
-                </div>
-            )}
-        </header>
-    );
+      {/* Mobile Menu */}
+      {menuOpen && isMobile && (
+        <div className="absolute top-16 left-0 w-full bg-neutral py-4">
+          <ul className="flex flex-col items-center space-y-4 text-white">
+            <li>
+              <Link to="/login" className="btn btn-outline hover:bg-primary">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/register"
+                className="btn btn-primary !text-white !hover:text-white bg-primary hover:bg-secondary"
+              >
+                Sign Up
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
+    </header>
+  );
 };
 
 export default Navbar;

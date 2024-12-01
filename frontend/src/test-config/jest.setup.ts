@@ -1,15 +1,15 @@
-import '@testing-library/jest-dom';
-import { TextEncoder, TextDecoder as NodeTextDecoder } from 'util';
+import "@testing-library/jest-dom";
+import { TextEncoder, TextDecoder as NodeTextDecoder } from "util";
 
 // Mock for matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: jest.fn().mockImplementation((query: string) => ({
     matches: false,
     media: query,
     onchange: null,
-    addEventListener: jest.fn(), 
-    removeEventListener: jest.fn(), 
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
   })),
 });
 
@@ -21,10 +21,10 @@ global.ResizeObserver = class ResizeObserver {
 };
 
 // Polyfill for TextEncoder and TextDecoder
-if (typeof global.TextEncoder === 'undefined') {
+if (typeof global.TextEncoder === "undefined") {
   global.TextEncoder = TextEncoder;
 }
 
-if (typeof global.TextDecoder === 'undefined') {
+if (typeof global.TextDecoder === "undefined") {
   global.TextDecoder = NodeTextDecoder as unknown as typeof global.TextDecoder;
 }

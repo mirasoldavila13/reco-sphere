@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
 
       # Step 3: Install dependencies
       - name: Install Dependencies
@@ -31,11 +31,11 @@ jobs:
           cd frontend
           npm install
 
-      # Step 4: Lint frontend
-      - name: Lint Frontend
+      # Step 4: Lint frontend with --fix
+      - name: Lint Frontend (with fix)
         run: |
           cd frontend
-          npm run lint
+          npm run lint -- --fix
 
       # Step 5: Build frontend
       - name: Build Frontend
@@ -77,11 +77,11 @@ jobs:
           cd backend
           npm install
 
-      # Step 4: Lint backend
-      - name: Lint Backend
+      # Step 4: Lint backend with --fix
+      - name: Lint Backend (with fix)
         run: |
           cd backend
-          npm run lint
+          npm run lint -- --fix
 
       # Step 5: Test backend
       - name: Test Backend

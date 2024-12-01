@@ -14,5 +14,12 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true 
-  }
+  },
+  "include": [
+    "src",
+    "stv/App.tsx",
+    "jest.config.ts",
+    "vite.config.ts", 
+    "tailwind.config.js" 
+  ]
 }

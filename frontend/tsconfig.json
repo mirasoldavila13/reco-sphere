@@ -5,21 +5,32 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": ["jest", "node", "@testing-library/jest-dom"], 
-    "lib": ["dom", "es2020"], 
-    "moduleResolution": "node", 
-    "jsx": "react-jsx", 
-    "esModuleInterop": true, 
-    "allowSyntheticDefaultImports": true, 
+    "composite": true,
+    "types": ["jest", "node", "@testing-library/jest-dom"],
+    "lib": ["dom", "es2020"],
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true 
+    "skipLibCheck": true,
+    "noEmit": false
   },
   "include": [
     "src",
-    "stv/App.tsx",
     "jest.config.ts",
-    "vite.config.ts", 
-    "tailwind.config.js" 
-  ]
+    "vite.config.ts",
+    "eslint.config.js",
+    "jest.config.js",
+    "vite.config.js",
+    "postcss.config.js",
+    "tailwind.config.js",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.jsx"
+  ],
+  "exclude": ["node_modules", "dist", "coverage"]
 }

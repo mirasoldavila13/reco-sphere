@@ -1,10 +1,9 @@
 ---
 name: User Story
 about: Default user story template
-title: ''
-labels: ''
-assignees: 
-
+title: ""
+labels: ""
+assignees:
 ---
 
 ## User Story:

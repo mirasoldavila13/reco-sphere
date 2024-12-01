@@ -23,6 +23,7 @@ export default [
         ...globals.browser,
         ...globals.jest,
         global: true,
+        node: true,
       },
       parser: tseslintParser,
       parserOptions: {

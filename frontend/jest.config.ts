@@ -1,14 +1,14 @@
 import type { Config } from "jest";
 
 const config: Config = {
-  preset: "ts-jest", // Use the ts-jest preset for TypeScript
-  testEnvironment: "jsdom", // Set the test environment to jsdom
+  preset: "ts-jest", 
+  testEnvironment: "jsdom", 
   setupFilesAfterEnv: ["<rootDir>/src/test-config/jest.setup.ts"],
   moduleNameMapper: {
-    "\\.(css|scss)$": "identity-obj-proxy", // Mock CSS imports
+    "\\.(css|scss)$": "identity-obj-proxy", 
   },
   transform: {
-    "^.+\\.tsx?$": "ts-jest", // Use ts-jest to transform TypeScript files
+    "^.+\\.tsx?$": "ts-jest", 
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
 };

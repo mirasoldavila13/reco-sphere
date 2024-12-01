@@ -26,7 +26,6 @@
   },
   "include": [
     "src",
-    "jest.config.js",
     "postcss.config.js",
     "vite.config.js",
     "eslint.config.js",
@@ -35,5 +34,12 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx"
+  ],
+  "exclude": [
+    "jest.config.js",
+    "jest.config.d.ts",
+    "node_modules",
+    "dist",
+    "coverage"
   ]
 }

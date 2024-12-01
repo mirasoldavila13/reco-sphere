@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1733087417289" clover="3.2.0">
-  <project timestamp="1733087417289" name="All files">
+<coverage generated="1733088199415" clover="3.2.0">
+  <project timestamp="1733088199415" name="All files">
     <metrics statements="18" coveredstatements="18" conditionals="5" coveredconditionals="4" methods="5" coveredmethods="5" elements="28" coveredelements="27" complexity="0" loc="18" ncloc="18" packages="1" files="1" classes="1"/>
     <file name="Navbar.tsx" path="C:\Users\miras\OneDrive\Desktop\reco-sphere\frontend\src\components\Navbar.tsx">
       <metrics statements="18" coveredstatements="18" conditionals="5" coveredconditionals="4" methods="5" coveredmethods="5"/>

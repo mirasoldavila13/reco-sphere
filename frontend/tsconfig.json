@@ -6,31 +6,35 @@
   ],
   "compilerOptions": {
     "composite": true,
-    "types": ["jest", "node", "@testing-library/jest-dom"],
-    "lib": ["dom", "es2020"],
-    "moduleResolution": "node",
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "noEmit": false
+    "types": ["jest", "node", "@testing-library/jest-dom"], // Types for testing
+    "lib": ["dom", "es2020"], // Modern DOM and ES2020 features
+    "moduleResolution": "node", // Node module resolution
+    "jsx": "react-jsx", // React JSX support
+    "esModuleInterop": true, // Enable ES module interop
+    "allowSyntheticDefaultImports": true, // Allow default imports
+    "strict": true, // Enable all strict type-checking options
+    "forceConsistentCasingInFileNames": true, // Enforce case sensitivity
+    "skipLibCheck": true, // Skip library type-checking
+    "noEmit": true // Prevent output of compiled JavaScript files
   },
   "include": [
     "src",
     "jest.config.ts",
     "vite.config.ts",
     "eslint.config.js",
-    "jest.config.js",
     "vite.config.js",
     "postcss.config.js",
     "tailwind.config.js",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/**/*.d.ts",
     "src/**/*.js",
     "src/**/*.jsx"
-  ],
-  "exclude": ["node_modules", "dist", "coverage"]
+  ]
 }

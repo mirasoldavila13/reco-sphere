@@ -20,6 +20,7 @@ export default [
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
+        ...globals.node,
         ...globals.browser,
         ...globals.jest,
         global: true,

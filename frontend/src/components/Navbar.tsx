@@ -81,7 +81,10 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {menuOpen && isMobile && (
         <div className="absolute top-16 left-0 w-full bg-neutral py-4">
-          <ul role="list" className="flex flex-col items-center space-y-4 text-white">
+          <ul
+            role="list"
+            className="flex flex-col items-center space-y-4 text-white"
+          >
             <li>
               <Link to="/login" className="btn btn-outline hover:bg-primary">
                 Login

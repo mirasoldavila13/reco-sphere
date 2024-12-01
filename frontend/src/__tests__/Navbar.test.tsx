@@ -45,7 +45,9 @@ describe("Navbar Component", () => {
     // Click the hamburger button again to close the menu
     fireEvent.click(hamburgerButton);
 
-    expect(screen.queryByRole("list", { hidden: true })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { hidden: true }),
+    ).not.toBeInTheDocument();
   });
 
   test("handles window resize to set isMobile state", () => {
@@ -60,7 +62,9 @@ describe("Navbar Component", () => {
     global.dispatchEvent(new Event("resize"));
 
     // Mobile menu should not be open
-    expect(screen.queryByRole("list", { hidden: true })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { hidden: true }),
+    ).not.toBeInTheDocument();
 
     // Simulate a window resize to a small screen
     global.innerWidth = 500;

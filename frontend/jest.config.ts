@@ -11,6 +11,9 @@ const config: Config = {
     "^.+\\.tsx?$": "ts-jest",
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
+  testMatch: ["**/?(*.)+(spec|test).[tj]s?(x)"],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 };
 
 export default config;
+7

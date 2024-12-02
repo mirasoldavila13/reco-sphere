@@ -84,13 +84,13 @@ jobs:
           npm install
 
       # Step 4: Lint Server with --fix
-      - name: Lint Backend (with fix)
+      - name: Lint Server (with fix)
         run: |
           cd server
           npm run lint -- --fix
 
       # Step 5: Test Server
-      - name: Test Backend
+      - name: Test Server
         run: |
           cd server
           npm test -- --coverage

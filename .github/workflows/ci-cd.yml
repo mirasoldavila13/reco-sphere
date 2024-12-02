@@ -28,38 +28,38 @@ jobs:
       # Step 3: Install dependencies
       - name: Install Dependencies
         run: |
-          cd frontend
+          cd client
           npm install
 
       # Step 4: Clean cached Jest config
       - name: Clean Cached Jest Config
         run: |
-          cd frontend
+          cd client
           find . -name "jest.config.js" -exec rm -f {} \;
 
-      # Step 5: Lint frontend with --fix
+      # Step 5: Lint Client with --fix
       - name: Lint Frontend (with fix)
         run: |
-          cd frontend
+          cd client
           npm run lint -- --fix
 
-      # Step 6: Build frontend
+      # Step 6: Build Client
       - name: Build Frontend
         run: |
-          cd frontend
+          cd client
           npm run build
 
-      # Step 7: Test frontend
+      # Step 7: Test Client
       - name: Test Frontend
         run: |
-          cd frontend
+          cd client
           npm test -- --coverage --config jest.config.ts
 
-      - name: Upload Frontend Coverage
+      - name: Upload Client Coverage
         uses: actions/upload-artifact@v3
         with:
-          name: frontend-coverage
-          path: frontend/coverage
+          name: client-coverage
+          path: client/coverage
 
   # Backend Workflow
   backend:
@@ -75,32 +75,32 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
 
       # Step 3: Install dependencies
       - name: Install Dependencies
         run: |
-          cd backend
+          cd server
           npm install
 
-      # Step 4: Lint backend with --fix
+      # Step 4: Lint Server with --fix
       - name: Lint Backend (with fix)
         run: |
-          cd backend
+          cd server
           npm run lint -- --fix
 
-      # Step 5: Test backend
+      # Step 5: Test Server
       - name: Test Backend
         run: |
-          cd backend
+          cd server
           npm test -- --coverage
 
-      # Step 6: Upload Backend Coverage
-      - name: Upload Backend Coverage
+      # Step 6: Upload Server Coverage
+      - name: Upload Server Coverage
         uses: actions/upload-artifact@v3
         with:
-          name: backend-coverage
-          path: backend/coverage
+          name: server-coverage
+          path: server/coverage
 
   # Microservice Workflow
   microservice:

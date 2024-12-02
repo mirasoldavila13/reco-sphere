@@ -17,7 +17,7 @@ describe("MongoDB Integration Tests", () => {
     // Connect to MongoDB
     await mongoose.connect(TEST_MONGODB_URI, {
       dbName: "reco-sphere-test",
-      serverSelectionTimeoutMS: 5000, // Timeout for MongoDB server selection
+      serverSelectionTimeoutMS: 3000, // Timeout for MongoDB server selection
     });
 
     // Clear existing collections to avoid duplicate entries

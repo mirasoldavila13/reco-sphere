@@ -1,6 +1,6 @@
-import type { Config } from "jest";
-
-const config: Config = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var config = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
   setupFilesAfterEnv: ["<rootDir>/src/test-config/jest.setup.ts"],
@@ -11,8 +11,5 @@ const config: Config = {
     "^.+\\.tsx?$": "ts-jest",
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
-  testMatch: ["**/*.test.ts", "**/*.test.tsx"],
-  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 };
-
-export default config;
+exports.default = config;

@@ -1,12 +1,14 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 describe("Navbar Component", () => {
   beforeAll(() => {
-    // Mock window size for tests
-    global.innerWidth = 500; // Mobile screen size
-    global.dispatchEvent(new Event("resize"));
+    // Ensure a mobile screen size for initial tests
+    act(() => {
+      global.innerWidth = 500; // Simulate mobile screen
+      global.dispatchEvent(new Event("resize"));
+    });
   });
 
   test("renders the Navbar heading", () => {
@@ -34,20 +36,19 @@ describe("Navbar Component", () => {
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
 
     // Click the hamburger button to open the menu
-    fireEvent.click(hamburgerButton);
+    act(() => {
+      fireEvent.click(hamburgerButton);
+    });
 
-    // Debug the DOM after the click
-    screen.debug();
-
-    const mobileMenu = screen.getByRole("list", { hidden: true });
+    const mobileMenu = screen.getByRole("list");
     expect(mobileMenu).toBeInTheDocument();
 
     // Click the hamburger button again to close the menu
-    fireEvent.click(hamburgerButton);
+    act(() => {
+      fireEvent.click(hamburgerButton);
+    });
 
-    expect(
-      screen.queryByRole("list", { hidden: true }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });
 
   test("handles window resize to set isMobile state", () => {
@@ -58,19 +59,21 @@ describe("Navbar Component", () => {
     );
 
     // Simulate a window resize to a large screen
-    global.innerWidth = 1024;
-    global.dispatchEvent(new Event("resize"));
+    act(() => {
+      global.innerWidth = 1024; // Simulate desktop screen
+      global.dispatchEvent(new Event("resize"));
+    });
 
-    // Mobile menu should not be open
-    expect(
-      screen.queryByRole("list", { hidden: true }),
-    ).not.toBeInTheDocument();
+    // Menu should not be visible on a large screen
+    expect(screen.queryByRole("list")).not.toBeInTheDocument();
 
     // Simulate a window resize to a small screen
-    global.innerWidth = 500;
-    global.dispatchEvent(new Event("resize"));
+    act(() => {
+      global.innerWidth = 500; // Simulate mobile screen
+      global.dispatchEvent(new Event("resize"));
+    });
 
-    // Hamburger button should now be present
+    // Hamburger button should be present
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
 

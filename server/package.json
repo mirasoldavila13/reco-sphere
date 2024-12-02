@@ -8,7 +8,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "lint": "eslint .",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js --coverage",
     "prettier": "prettier --write ."
   },
   "keywords": [],
@@ -34,6 +34,19 @@
     "nodemon": "^2.0.22",
     "prettier": "^3.4.1",
     "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 30000,
+    "coverageThreshold": {
+      "global": {
+        "statements": 80,
+        "branches": 80,
+        "functions": 80,
+        "lines": 80
+      }
+    },
+    "transform": {}
   },
   "eslintConfig": {
     "env": {

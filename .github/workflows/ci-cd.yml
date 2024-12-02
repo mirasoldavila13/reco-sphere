@@ -31,23 +31,29 @@ jobs:
           cd frontend
           npm install
 
-      # Step 4: Lint frontend with --fix
+      # Step 4: Clean cached Jest config
+      - name: Clean Cached Jest Config
+        run: |
+          cd frontend
+          find . -name "jest.config.js" -exec rm -f {} \;
+
+      # Step 5: Lint frontend with --fix
       - name: Lint Frontend (with fix)
         run: |
           cd frontend
           npm run lint -- --fix
 
-      # Step 5: Build frontend
+      # Step 6: Build frontend
       - name: Build Frontend
         run: |
           cd frontend
           npm run build
 
-      # Step 6: Test frontend
+      # Step 7: Test frontend
       - name: Test Frontend
         run: |
           cd frontend
-          npm test -- --coverage
+          npm test -- --coverage --config jest.config.ts
 
       - name: Upload Frontend Coverage
         uses: actions/upload-artifact@v3
@@ -89,7 +95,7 @@ jobs:
           cd backend
           npm test -- --coverage
 
-      # Step 6:
+      # Step 6: Upload Backend Coverage
       - name: Upload Backend Coverage
         uses: actions/upload-artifact@v3
         with:

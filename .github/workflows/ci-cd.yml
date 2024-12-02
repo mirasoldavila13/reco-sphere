@@ -10,8 +10,8 @@ on:
 
 jobs:
   # Frontend Workflow
-  frontend:
-    name: Frontend CI
+  client:
+    name: Client CI
     runs-on: ubuntu-latest
 
     steps:
@@ -38,19 +38,19 @@ jobs:
           find . -name "jest.config.js" -exec rm -f {} \;
 
       # Step 5: Lint Client with --fix
-      - name: Lint Frontend (with fix)
+      - name: Lint Client (with fix)
         run: |
           cd client
           npm run lint -- --fix
 
       # Step 6: Build Client
-      - name: Build Frontend
+      - name: Build Client
         run: |
           cd client
           npm run build
 
       # Step 7: Test Client
-      - name: Test Frontend
+      - name: Test Client
         run: |
           cd client
           npm test -- --coverage --config jest.config.ts
@@ -61,9 +61,9 @@ jobs:
           name: client-coverage
           path: client/coverage
 
-  # Backend Workflow
-  backend:
-    name: Backend CI
+  # Server Workflow
+  server:
+    name: Server CI
     runs-on: ubuntu-latest
 
     steps:
@@ -91,6 +91,9 @@ jobs:
 
       # Step 5: Test Server
       - name: Test Server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
         run: |
           cd server
           npm test -- --coverage
@@ -131,10 +134,10 @@ jobs:
           cd microservice
           ./mvnw test
 
-  # Deployment Workflow (Placeholder for now)
+  # Deployment Workflow
   deploy:
     name: Deployment CI/CD
-    needs: [frontend, backend, microservice]
+    needs: [client, server, microservice]
     runs-on: ubuntu-latest
 
     steps:
@@ -143,16 +146,16 @@ jobs:
         uses: actions/checkout@v3
 
       # Placeholder Deployment for Frontend
-      - name: Deploy Frontend
+      - name: Deploy Client
         if: success()
         run: |
-          echo "Frontend deployment placeholder. Replace with actual deployment script."
+          echo "Client deployment placeholder. Replace with actual deployment script."
 
-      # Placeholder Deployment for Backend
-      - name: Deploy Backend
+      # Placeholder Deployment for Server
+      - name: Deploy server
         if: success()
         run: |
-          echo "Backend deployment placeholder. Replace with actual deployment script."
+          echo "Server deployment placeholder. Replace with actual deployment script."
 
       # Placeholder Deployment for Microservice
       - name: Deploy Microservice

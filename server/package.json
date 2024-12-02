@@ -1,0 +1,59 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "The backend server for RecoSphere, a personalized content recommendation platform. This service handles API requests, user authentication, and database interactions, powered by Express.js, Apollo Server, and MongoDB.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "lint": "eslint .",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "prettier": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "Mirasol Davila",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "apollo-server-express": "^3.13.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "graphql": "^16.9.0",
+    "mongoose": "^8.8.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "@types/graphql": "^14.5.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.13.0",
+    "jest": "^29.7.0",
+    "nodemon": "^2.0.22",
+    "prettier": "^3.4.1",
+    "supertest": "^7.0.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "es2021": true,
+      "node": true
+    },
+    "extends": "airbnb-base",
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "rules": {
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
+  }
+}

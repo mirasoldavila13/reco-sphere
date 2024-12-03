@@ -119,16 +119,22 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: 21
           distribution: temurin
 
-      # Step 3: Build microservice
+      # Step 3: Make Maven Wrapper Executable
+      - name: Grant Execute Permission to Maven Wrapper
+        run: |
+          cd microservice
+          chmod +x mvnw
+
+      # Step 4: Build microservice
       - name: Build Microservice
         run: |
           cd microservice
           ./mvnw clean install
 
-      # Step 4: Test microservice
+      # Step 5: Test microservice
       - name: Test Microservice
         run: |
           cd microservice
@@ -139,7 +145,6 @@ jobs:
     name: Deployment CI/CD
     needs: [client, server, microservice]
     runs-on: ubuntu-latest
-
     steps:
       # Step 1: Checkout code
       - name: Checkout Code

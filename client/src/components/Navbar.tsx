@@ -57,10 +57,10 @@ const Navbar = () => {
 
         {/* Buttons for Desktop */}
         <div className="hidden md:flex space-x-4 ml-auto">
-          <Link to="/login" className="btn btn-outline hover:bg-primary">
+          <Link to="/login" className="btn btn-outline btn-accent">
             Login
           </Link>
-          <Link to="/register" className="btn btn-primary hover:bg-secondary">
+          <Link to="/register" className="btn btn-primary">
             Sign Up
           </Link>
         </div>

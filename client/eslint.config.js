@@ -13,9 +13,7 @@ import prettierPlugin from "eslint-plugin-prettier";
 
 export default [
   {
-    ignores: ["dist", "coverage", "**/*.d.ts"],
-  },
-  {
+    ignores: ["dist/**", "coverage", "**/*.d.ts", "node_modules"],
     files: ["**/*.{ts,tsx,js,jsx}"],
     languageOptions: {
       ecmaVersion: 2020,
@@ -25,10 +23,11 @@ export default [
         ...globals.jest,
         global: true,
         node: true,
+        __REACT_DEVTOOLS_GLOBAL_HOOK__: "readonly",
+        MSApp: "readonly",
       },
       parser: tseslintParser,
       parserOptions: {
-        // project: "./tsconfig.app.json",
         tsconfigRootDir: __dirname,
         sourceType: "module",
       },
@@ -40,19 +39,35 @@ export default [
       prettier: prettierPlugin,
     },
     rules: {
-      // Recommended rules
       ...js.configs.recommended.rules,
       ...tseslintPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
 
-      // React-specific rules
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
-
       // Prettier formatting
       "prettier/prettier": "warn",
+
+      // Expressions
+      "@typescript-eslint/no-unused-expressions": [
+        "error",
+        { allowShortCircuit: true, allowTernary: true },
+      ],
+
+      // Variables
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
+
+      // Complexity
+      complexity: ["warn", 30], // Temporarily increased
+
+      // Consistent Returns
+      "consistent-return": "error",
+
+      // Other rules
+      "no-cond-assign": ["error", "except-parens"],
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      "no-prototype-builtins": "off",
     },
   },
 ];

@@ -1,12 +1,14 @@
-import { BrowserRouter as Router, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   return (
     <Router>
-      <Navbar />
       <main>
-        <Routes></Routes>
+        <Routes>
+          {/* Landing Page Route */}
+          <Route path="/" element={<LandingPage />} />
+        </Routes>
       </main>
     </Router>
   );

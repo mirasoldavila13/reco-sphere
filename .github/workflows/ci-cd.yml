@@ -100,6 +100,7 @@ jobs:
         env:
           MONGODB_URI: mongodb://localhost:27017/test
           TEST_MONGODB_URI: mongodb://localhost:27017/test
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           cd server
           npm test -- --coverage

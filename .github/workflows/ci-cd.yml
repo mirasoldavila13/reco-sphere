@@ -66,6 +66,12 @@ jobs:
     name: Server CI
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+
     steps:
       # Step 1: Checkout code
       - name: Checkout Code
@@ -92,8 +98,8 @@ jobs:
       # Step 5: Test Server
       - name: Test Server
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          MONGODB_URI: mongodb://localhost:27017/test
+          TEST_MONGODB_URI: mongodb://localhost:27017/test
         run: |
           cd server
           npm test -- --coverage

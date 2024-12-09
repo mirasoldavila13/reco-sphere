@@ -37,4 +37,7 @@ export default {
 
   //  Load environment variables for tests
   setupFiles: ["dotenv/config"],
+
+  // Global test timeout
+  testTimeout: 30000, // 30 seconds
 };

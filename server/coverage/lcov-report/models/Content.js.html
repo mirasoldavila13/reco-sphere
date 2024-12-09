@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for Recommendation.js</title>
+    <title>Code coverage report for models/Content.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="prettify.css" />
-    <link rel="stylesheet" href="base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(sort-arrow-sprite.png);
+            background-image: url(../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> Recommendation.js</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">models</a> Content.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -132,9 +132,9 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -169,6 +169,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,74 +206,76 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * Recommendation Model
+ * Content Model
  *
- * This module defines the schema and model for storing personalized recommendations
- * for users in the MongoDB database. Recommendations link users to specific content
- * and include metadata about why the recommendation was made.
+ * This module defines the schema and model for storing content information in the MongoDB database.
+ * Content can represent movies, TV shows, or other media, with metadata for rich descriptions.
  *
  * Key Features:
- * - Tracks the user and content associated with the recommendation.
- * - Provides customizable reasons for the recommendation.
- * - Supports recommendation statuses (e.g., "viewed", "dismissed").
- * - Includes metadata for algorithm type and relevance scores.
- * - Implements indexing to prevent duplicate recommendations for the same user and content.
+ * - Includes validation for required fields like `title`, `slug`, and `genre`.
+ * - Supports flexible metadata storage (e.g., external IDs, runtime, description).
+ * - Uses Mongoose timestamps to track when records are created or updated.
+ * - Implements indexing for efficient querying by `title` and `genre`.
  *
  * Usage:
- * 1. Import this model into your services or controllers to manage recommendations.
- * 2. Use it for querying, creating, or updating recommendations for users.
+ * 1. Import this model into your services or controllers for CRUD operations.
+ * 2. Use it to save, retrieve, update, or delete content records in the database.
  */
 &nbsp;
 import mongoose from "mongoose";
 &nbsp;
-const recommendationSchema = new mongoose.Schema(
+const contentSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    contentId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Content",
-      required: true,
-    },
-    reason: {
+    title: {
       type: String,
-      default: "Recommended based on your preferences.",
-      minlength: 10,
-      maxlength: 500,
+      required: true,
       trim: true,
+      minlength: 1,
+      maxlength: 200,
     },
-    status: {
+    slug: {
       type: String,
-      enum: ["viewed", "dismissed", "pending"],
-      default: "pending",
+      unique: true,
+      required: true,
     },
-    context: {
-      algorithm: {
-        type: String,
-        default: "collaborative-filtering",
+    genre: {
+      type: [String],
+      required: true,
+      validate: {
+        validator(value) {
+          return value.length &gt; 0;
+        },
+        message: "At least one genre must be specified.",
       },
-      score: {
-        type: Number,
-        default: null,
-      },
+    },
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 10,
+    },
+    metadata: {
+      externalId: { type: String, default: null },
+      releaseDate: { type: Date, default: null },
+      runtime: { type: Number, default: null },
+      description: { type: String, default: "" },
     },
     isDeleted: {
       type: Boolean,
       default: false,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true, // Automatically add `createdAt` and `updatedAt`
+  },
 );
 &nbsp;
-// Prevent duplicate recommendations for the same user and content
-recommendationSchema.index({ userId: 1, contentId: 1 }, { unique: true });
+// Index for efficient lookups
+contentSchema.index({ title: 1, genre: 1 });
 &nbsp;
-const Recommendation = mongoose.model("Recommendation", recommendationSchema);
+const Content = mongoose.model("Content", contentSchema);
 &nbsp;
-export default Recommendation;
+export default Content;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -277,16 +283,16 @@ export default Recommendation;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-09T10:02:14.690Z
+                at 2024-12-09T10:26:00.361Z
             </div>
-        <script src="prettify.js"></script>
+        <script src="../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="sorter.js"></script>
-        <script src="block-navigation.js"></script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
     </body>
 </html>
     

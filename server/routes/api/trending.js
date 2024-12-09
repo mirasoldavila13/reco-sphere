@@ -1,3 +1,19 @@
+/**
+ * Trending Content Routes
+ *
+ * This module provides an API endpoint for retrieving trending content
+ * from the TMDb API. It uses caching to improve performance and reduce
+ * redundant API calls.
+ *
+ * Endpoints:
+ * - GET `/` - Retrieves trending content.
+ *
+ * Features:
+ * - Utilizes `axios` for API requests to TMDb.
+ * - Implements caching with `node-cache` to store responses for 1 hour.
+ * - Logs errors using `winston`.
+ */
+
 import express from "express";
 import axios from "axios";
 import NodeCache from "node-cache";

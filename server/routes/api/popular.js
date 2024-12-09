@@ -1,3 +1,19 @@
+/**
+ * Popular Movies and TV Shows Routes
+ *
+ * This module provides API endpoints for retrieving popular movies
+ * and TV shows from the TMDb API. It uses caching to improve
+ * performance and reduce redundant API calls.
+ *
+ * Endpoints:
+ * - GET `/movies` - Retrieves popular movies.
+ * - GET `/tv` - Retrieves popular TV shows.
+ *
+ * Features:
+ * - Utilizes `axios` for API requests to TMDb.
+ * - Implements caching with `node-cache` to store responses for 1 hour.
+ */
+
 import express from "express";
 import axios from "axios";
 import NodeCache from "node-cache";

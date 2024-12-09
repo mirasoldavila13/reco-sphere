@@ -1,3 +1,19 @@
+/**
+ * Genre Routes
+ *
+ * This module provides API endpoints for retrieving movie and TV genres
+ * from the TMDb API. It uses caching to improve performance and reduce
+ * redundant API calls.
+ *
+ * Endpoints:
+ * - GET `/` - Retrieves movie and TV genres.
+ *
+ * Features:
+ * - Utilizes `axios` for API requests to TMDb.
+ * - Implements caching with `node-cache` to store genres for 1 hour.
+ * - Logs errors using `winston`.
+ */
+
 import express from "express";
 import axios from "axios";
 import NodeCache from "node-cache";

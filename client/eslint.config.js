@@ -42,6 +42,7 @@ export default [
       ...js.configs.recommended.rules,
       ...tseslintPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
 
       // Prettier formatting
       "prettier/prettier": "warn",
@@ -68,6 +69,8 @@ export default [
       "no-cond-assign": ["error", "except-parens"],
       "no-empty": ["error", { allowEmptyCatch: true }],
       "no-prototype-builtins": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "no-undef": "off",
     },
   },
 ];

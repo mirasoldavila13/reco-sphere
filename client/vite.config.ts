@@ -8,7 +8,14 @@ export default defineConfig({
     port: 3000,
     open: true,
     proxy: {
+      // Proxy for RESTful API endpoints
       "/api": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+        secure: false,
+      },
+      // Proxy for GraphQL endpoint
+      "/graphql": {
         target: "http://localhost:3001",
         changeOrigin: true,
         secure: false,

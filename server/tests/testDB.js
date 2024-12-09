@@ -25,6 +25,7 @@ const testDB = async () => {
 
     // Test User Schema
     const user = new User({
+      name: "John Doe", // New name field
       email: "testuser@example.com",
       password: "securepassword123",
       preferences: ["Action", "Comedy"],

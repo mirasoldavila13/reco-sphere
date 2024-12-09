@@ -1,3 +1,20 @@
+/**
+ * Content Model
+ *
+ * This module defines the schema and model for storing content information in the MongoDB database.
+ * Content can represent movies, TV shows, or other media, with metadata for rich descriptions.
+ *
+ * Key Features:
+ * - Includes validation for required fields like `title`, `slug`, and `genre`.
+ * - Supports flexible metadata storage (e.g., external IDs, runtime, description).
+ * - Uses Mongoose timestamps to track when records are created or updated.
+ * - Implements indexing for efficient querying by `title` and `genre`.
+ *
+ * Usage:
+ * 1. Import this model into your services or controllers for CRUD operations.
+ * 2. Use it to save, retrieve, update, or delete content records in the database.
+ */
+
 import mongoose from "mongoose";
 
 const contentSchema = new mongoose.Schema(

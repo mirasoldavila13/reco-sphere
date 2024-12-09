@@ -1,3 +1,27 @@
+/**
+ * MongoDB Integration Test Suite
+ *
+ * This file contains integration tests for MongoDB using Jest.
+ * It tests the basic functionality of database operations on the following models:
+ * - User
+ * - Content
+ * - Recommendation
+ *
+ * Key functionalities tested include:
+ * 1. Connecting to the database.
+ * 2. Creating and saving valid documents for each model.
+ * 3. Validating schema constraints such as required fields and data types.
+ * 4. Testing edge cases, such as invalid or missing data.
+ *
+ * The tests are designed to ensure data integrity and compliance with the defined schemas.
+ *
+ * Pre-requisites:
+ * - A test MongoDB instance, defined in the TEST_MONGODB_URI environment variable.
+ * - Jest for running the test suite.
+ *
+ * Note: The database is cleared (all collections) before each test run to ensure isolation.
+ */
+
 import mongoose from "mongoose";
 import { jest } from "@jest/globals";
 import dotenv from "dotenv";
@@ -35,8 +59,9 @@ describe("MongoDB Integration Tests", () => {
     expect(mongoose.connection.readyState).toBe(1); // 1 = connected
   });
 
-  test("should save a user document", async () => {
+  test("should save a user document with name", async () => {
     const user = new User({
+      name: "John Doe", // Adding name
       email: "testuser@example.com",
       password: "securepassword123",
       preferences: ["Action", "Comedy"],
@@ -45,6 +70,7 @@ describe("MongoDB Integration Tests", () => {
 
     const savedUser = await user.save();
     expect(savedUser._id).toBeDefined();
+    expect(savedUser.name).toBe("John Doe"); // Check name
     expect(savedUser.email).toBe("testuser@example.com");
   });
 
@@ -83,6 +109,7 @@ describe("MongoDB Integration Tests", () => {
 
   test("should save a user with valid history", async () => {
     const user = new User({
+      name: "Jane Smith", // Adding name
       email: "testuser2@example.com",
       password: "securepassword123",
       preferences: ["Action", "Comedy"],
@@ -91,10 +118,12 @@ describe("MongoDB Integration Tests", () => {
 
     const savedUser = await user.save();
     expect(savedUser.history).toEqual(["id1", "id2", "id3"]);
+    expect(savedUser.name).toBe("Jane Smith");
   });
 
   test("should fail to save a user with invalid history", async () => {
     const user = new User({
+      name: "Invalid User",
       email: "testuser3@example.com",
       password: "securepassword123",
       preferences: ["Action", "Comedy"],
@@ -103,6 +132,19 @@ describe("MongoDB Integration Tests", () => {
 
     await expect(user.save()).rejects.toThrow(
       "History must be an array of valid IDs",
+    );
+  });
+
+  test("should fail to save a user without a name", async () => {
+    const user = new User({
+      email: "testuser4@example.com",
+      password: "securepassword123",
+      preferences: ["Action", "Comedy"],
+      history: [],
+    });
+
+    await expect(user.save()).rejects.toThrow(
+      "User validation failed: name: Name is required",
     );
   });
 });

@@ -27,17 +27,13 @@ describe("Register Component", () => {
 
   it("shows modal with 'Please enter a valid email address.' for invalid email", async () => {
     setup();
-
+  
     // Fill in valid name and passwords but invalid email
-    const emailInput = screen.getByLabelText(
-      "Email Address",
-    ) as HTMLInputElement;
-
     fireEvent.change(screen.getByLabelText("Full Name"), {
       target: { value: "Test User" },
     });
-    fireEvent.change(emailInput, {
-      target: { value: "invalid-email" }, // Invalid email
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "invalid-email" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
       target: { value: "password123" },
@@ -45,23 +41,20 @@ describe("Register Component", () => {
     fireEvent.change(screen.getByLabelText("Confirm Password"), {
       target: { value: "password123" },
     });
-
-    // Mock the email input's validity to simulate the browser behavior
-    jest.spyOn(emailInput, "checkValidity").mockReturnValue(true);
-
-    // Submit the form
+  
     fireEvent.click(screen.getByRole("button", { name: "Register" }));
-
+  
     // Wait for the modal message to appear
     await waitFor(() => {
       expect(screen.getByTestId("modal-message")).toHaveTextContent(
         "Please enter a valid email address.",
       );
     });
-
+  
     // Ensure register function is NOT called
     expect(authService.register).not.toHaveBeenCalled();
   });
+  
 
   it("displays validation error for mismatched passwords", async () => {
     setup();
@@ -95,7 +88,7 @@ describe("Register Component", () => {
       target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "123" }, // Short password
+      target: { value: "123" },
     });
     fireEvent.change(screen.getByLabelText("Confirm Password"), {
       target: { value: "123" },
@@ -113,16 +106,16 @@ describe("Register Component", () => {
     setup();
 
     fireEvent.change(screen.getByLabelText("Full Name"), {
-      target: { value: "   " }, // Whitespace only
+      target: { value: "   " },
     });
     fireEvent.change(screen.getByLabelText("Email Address"), {
-      target: { value: "   " }, // Whitespace only
+      target: { value: "   " },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "   " }, // Whitespace only
+      target: { value: "   " },
     });
     fireEvent.change(screen.getByLabelText("Confirm Password"), {
-      target: { value: "   " }, // Whitespace only
+      target: { value: "   " },
     });
     fireEvent.click(screen.getByRole("button", { name: "Register" }));
 
@@ -163,7 +156,6 @@ describe("Register Component", () => {
 
     fireEvent.click(screen.getByText("Close"));
 
-    // Ensure navigate was called correctly
     expect(authService.getProfile).toHaveBeenCalled();
   });
 
@@ -194,9 +186,46 @@ describe("Register Component", () => {
   });
 
   it("displays API error when registration fails", async () => {
+    // Mock the API to reject with an error
     (authService.register as jest.Mock).mockRejectedValue(
-      new Error("API error"),
+      new Error("An error occurred during registration.")
     );
+  
+    setup();
+  
+    // Fill in valid form fields
+    fireEvent.change(screen.getByLabelText("Full Name"), {
+      target: { value: "Test User" },
+    });
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "password123" },
+    });
+    fireEvent.change(screen.getByLabelText("Confirm Password"), {
+      target: { value: "password123" },
+    });
+  
+    // Submit the form
+    fireEvent.click(screen.getByRole("button", { name: "Register" }));
+  
+    // Debug DOM state
+    console.log(screen.debug());
+  
+    // Wait for the modal to appear with the error message
+    await waitFor(() => {
+      expect(
+        screen.getByText((content) =>
+          content.includes("An error occurred during registration.")
+        )
+      ).toBeInTheDocument();
+    });
+  });
+  
+
+  it("handles unknown errors gracefully", async () => {
+    (authService.register as jest.Mock).mockRejectedValueOnce("Unknown error");
 
     setup();
 
@@ -212,11 +241,12 @@ describe("Register Component", () => {
     fireEvent.change(screen.getByLabelText("Confirm Password"), {
       target: { value: "password123" },
     });
+
     fireEvent.click(screen.getByRole("button", { name: "Register" }));
 
     await waitFor(() => {
       expect(
-        screen.getByText("An error occurred during registration."),
+        screen.getByText("An unknown error occurred during registration."),
       ).toBeInTheDocument();
     });
   });

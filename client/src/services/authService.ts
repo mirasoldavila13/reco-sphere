@@ -67,13 +67,14 @@ class AuthService {
           variables: { input: userData },
         }),
       });
-
+  
       const result = await response.json();
-
-      if (result.errors) {
-        throw new Error(result.errors[0].message || "Registration failed");
+  
+      // Handle missing or invalid response structure
+      if (!result || !result.data || !result.data.registerUser) {
+        throw new Error("An unknown error occurred during registration.");
       }
-
+  
       const { token, user } = result.data.registerUser;
       this.setToken(token);
       return { token, user };
@@ -81,13 +82,14 @@ class AuthService {
       if (error instanceof Error) {
         this.logError("Error during registration", error.message);
         throw new Error(
-          error.message || "An error occurred during registration.",
+          error.message || "An error occurred during registration."
         );
       }
       this.logError("Unknown error during registration", error);
       throw new Error("An unknown error occurred during registration.");
     }
   }
+  
 
   async login(
     email: string,

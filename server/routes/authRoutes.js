@@ -1,10 +1,11 @@
 /**
  * Auth Routes
  *
- * Defines routes related to authentication, including user registration and access to protected resources.
+ * Defines routes related to authentication, including user registration, login, and access to protected resources.
  *
  * Routes:
  * - `POST /api/auth/register`: Public route for registering a new user.
+ * - `POST /api/auth/login`: Public route for logging in an existing user.
  * - `GET /api/auth/dashboard`: Protected route that retrieves the authenticated user's profile.
  *
  * Middleware:
@@ -17,7 +18,9 @@
 
 import express from "express";
 import { registerUser } from "../controllers/authController.js";
+import { loginUser } from "../controllers/authController.js";
 import protectRoute from "../middleware/authMiddleware.js";
+
 import User from "../models/User.js";
 
 const router = express.Router();
@@ -28,6 +31,13 @@ const router = express.Router();
  * @access Public
  */
 router.post("/register", registerUser);
+
+/**
+ * @desc Login route
+ * @route POST /api/auth/login
+ * @access Public
+ */
+router.post("/login", loginUser);
 
 /**
  * @desc Dashboard route

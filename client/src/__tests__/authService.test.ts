@@ -12,99 +12,95 @@ describe("AuthService", () => {
     localStorage.clear();
   });
 
-  describe("register", () => {
-    it("handles registration errors gracefully", async () => {
-      const mockErrorResponse = {
-        errors: [{ message: "Registration failed" }],
-      };
+  it("handles registration errors gracefully", async () => {
+    const mockErrorResponse = {
+      errors: [{ message: "Registration failed" }],
+    };
 
-      global.fetch = jest.fn(() =>
-        Promise.resolve({
-          json: () => Promise.resolve(mockErrorResponse),
-        }),
-      ) as jest.Mock;
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockErrorResponse),
+      }),
+    ) as jest.Mock;
 
-      const userData = {
-        name: "Test User",
-        email: "test@example.com",
-        password: "password123",
-      };
+    const userData = {
+      name: "Test User",
+      email: "test@example.com",
+      password: "password123",
+    };
 
-      await expect(authService.register(userData)).rejects.toThrow(
-        "Registration failed",
-      );
-    });
+    await expect(authService.register(userData)).rejects.toThrow(
+      "Registration failed",
+    );
+  });
 
-    it("registers a user successfully", async () => {
-      const mockResponse = {
-        data: {
-          registerUser: {
-            token: "mockToken",
-            user: { id: "123", name: "Test User", email: "test@example.com" },
-          },
+  it("registers a user successfully", async () => {
+    const mockResponse = {
+      data: {
+        registerUser: {
+          token: "mockToken",
+          user: { id: "123", name: "Test User", email: "test@example.com" },
         },
-      };
+      },
+    };
 
-      global.fetch = jest.fn(() =>
-        Promise.resolve({
-          json: () => Promise.resolve(mockResponse),
-        }),
-      ) as jest.Mock;
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockResponse),
+      }),
+    ) as jest.Mock;
 
-      const userData = {
-        name: "Test User",
-        email: "test@example.com",
-        password: "password123",
-      };
-      const result = await authService.register(userData);
+    const userData = {
+      name: "Test User",
+      email: "test@example.com",
+      password: "password123",
+    };
+    const result = await authService.register(userData);
 
-      expect(result).toEqual(mockResponse.data.registerUser);
-      expect(localStorage.getItem("jwtToken")).toBe("mockToken");
-    });
+    expect(result).toEqual(mockResponse.data.registerUser);
+    expect(localStorage.getItem("jwtToken")).toBe("mockToken");
+  });
 
-    it("handles missing data field in the response", async () => {
-      const mockErrorResponse = {};
+  it("handles missing data field in the response", async () => {
+    const mockErrorResponse = {};
 
-      global.fetch = jest.fn(() =>
-        Promise.resolve({
-          json: () => Promise.resolve(mockErrorResponse),
-        }),
-      ) as jest.Mock;
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockErrorResponse),
+      }),
+    ) as jest.Mock;
 
-      const userData = {
-        name: "Test User",
-        email: "test@example.com",
-        password: "password123",
-      };
+    const userData = {
+      name: "Test User",
+      email: "test@example.com",
+      password: "password123",
+    };
 
-      await expect(authService.register(userData)).rejects.toThrow(
-        "An unknown error occurred during registration.",
-      );
-    });
+    await expect(authService.register(userData)).rejects.toThrow(
+      "An unknown error occurred during registration.",
+    );
+  });
 
-    it("logs and throws an unknown error during registration", async () => {
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-      global.fetch = jest.fn(
-        () => Promise.reject("Network Error"), // Simulate a network-level error
-      );
+  it("logs and throws an unknown error during registration", async () => {
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+    global.fetch = jest.fn(() => Promise.reject("Network Error"));
 
-      const userData = {
-        name: "Test User",
-        email: "test@example.com",
-        password: "password123",
-      };
+    const userData = {
+      name: "Test User",
+      email: "test@example.com",
+      password: "password123",
+    };
 
-      await expect(authService.register(userData)).rejects.toThrow(
-        "An unknown error occurred during registration.",
-      );
+    await expect(authService.register(userData)).rejects.toThrow(
+      "An unknown error occurred during registration.",
+    );
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "[AuthService]: Unknown error during registration",
-        "Network Error",
-      );
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "[AuthService]: Unknown error during registration",
+      "Network Error",
+    );
 
-      consoleSpy.mockRestore();
-    });
+    consoleSpy.mockRestore();
   });
 
   describe("login", () => {
@@ -143,7 +139,6 @@ describe("AuthService", () => {
         authService.login("test@example.com", "wrongpassword"),
       ).rejects.toThrow("Login failed");
     });
-
     it("handles missing token in the login response", async () => {
       const mockResponse = {
         data: {
@@ -239,20 +234,20 @@ describe("AuthService", () => {
       expect(authService.isAuthenticated()).toBe(false);
     });
 
-    it("returns false for valid tokens", () => {
+    it("returns false for expired tokens", () => {
       (jwtDecode as jest.Mock).mockReturnValue({
-        exp: Math.floor(Date.now() / 1000) + 1000, // Valid token
-      });
-
-      expect(authService.isAuthenticated()).toBe(true);
-    });
-
-    it("handles malformed tokens gracefully", () => {
-      (jwtDecode as jest.Mock).mockImplementation(() => {
-        throw new Error("Invalid token");
+        exp: Math.floor(Date.now() / 1000) - 10,
       });
 
       expect(authService.isAuthenticated()).toBe(false);
+    });
+
+    it("returns true for valid tokens", () => {
+      (jwtDecode as jest.Mock).mockReturnValue({
+        exp: Math.floor(Date.now() / 1000) + 1000,
+      });
+
+      expect(authService.isAuthenticated()).toBe(true);
     });
   });
 

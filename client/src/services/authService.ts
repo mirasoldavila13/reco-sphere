@@ -7,18 +7,27 @@
  * Features:
  * - **Registration**: Sends user details via GraphQL mutation and retrieves a JWT upon success.
  * - **Login**: Authenticates a user with their credentials using a GraphQL mutation and stores the returned JWT.
- * - **Token Management**: Handles secure storage, retrieval, and validation of the JWT token in localStorage.
+ * - **Token Management**: Handles secure storage, retrieval, and validation of the JWT token in `localStorage`.
  * - **Profile Retrieval**: Decodes the JWT token to extract the user's profile information, such as ID, email, and name.
- * - **Logout**: Clears the token from localStorage and updates the authentication state.
+ * - **Logout**: Clears the token from `localStorage` and updates the authentication state.
+ * - **Session Validation**: Checks if the user is authenticated by validating the token.
  *
  * Design Considerations:
- * - Stateless authentication using JWT to ensure scalability and security.
- * - Integration with a single `/graphql` endpoint to handle all operations.
- * - Comprehensive error handling for backend and client-side validation.
- * - Ensures secure password handling with backend validation and hashing.
+ * - **Stateless Authentication**: Uses JWT for stateless authentication, ensuring scalability.
+ * - **Error Handling**: Comprehensive error handling for backend and client-side validation.
+ * - **Security**: Ensures secure password handling with backend validation and hashing.
+ * - **Token Expiry Handling**: Automatically checks if the token has expired.
  *
  * Dependencies:
  * - `jwt-decode`: Decodes JWT tokens for extracting user information.
+ *
+ * Functions:
+ * - `register`: Registers a new user and stores the JWT token.
+ * - `login`: Authenticates a user and stores the JWT token.
+ * - `getProfile`: Decodes and returns the user profile from the JWT token.
+ * - `logout`: Clears the JWT token from localStorage.
+ * - `isAuthenticated`: Verifies if the user is authenticated based on the token.
+ * - `isTokenExpired`: Checks if a JWT token is expired.
  */
 
 import { JwtPayload, jwtDecode } from "jwt-decode";
@@ -67,14 +76,14 @@ class AuthService {
           variables: { input: userData },
         }),
       });
-  
+
       const result = await response.json();
-  
+
       // Handle missing or invalid response structure
       if (!result || !result.data || !result.data.registerUser) {
         throw new Error("An unknown error occurred during registration.");
       }
-  
+
       const { token, user } = result.data.registerUser;
       this.setToken(token);
       return { token, user };
@@ -82,14 +91,13 @@ class AuthService {
       if (error instanceof Error) {
         this.logError("Error during registration", error.message);
         throw new Error(
-          error.message || "An error occurred during registration."
+          error.message || "An error occurred during registration.",
         );
       }
       this.logError("Unknown error during registration", error);
       throw new Error("An unknown error occurred during registration.");
     }
   }
-  
 
   async login(
     email: string,
@@ -103,20 +111,34 @@ class AuthService {
         },
         body: JSON.stringify({
           query: `
-            mutation LoginUser($email: String!, $password: String!) {
-              loginUser(email: $email, password: $password) {
+            mutation LoginUser($input: LoginInput!) {
+              loginUser(input: $input) {
                 token
+                user {
+                  id
+                  name
+                  email
+                }
               }
             }
           `,
-          variables: { email, password },
+          variables: { input: { email, password } },
         }),
       });
 
       const result = await response.json();
 
-      if (result.errors) {
-        throw new Error(result.errors[0].message || "Login failed");
+      if (!response.ok || result.errors) {
+        const errorMessage = result.errors?.[0]?.message || "Failed to login.";
+        throw new Error(errorMessage);
+      }
+
+      if (
+        !result.data ||
+        !result.data.loginUser ||
+        !result.data.loginUser.token
+      ) {
+        throw new Error("Invalid server response. Please try again.");
       }
 
       const { token } = result.data.loginUser;
@@ -125,7 +147,7 @@ class AuthService {
     } catch (error: unknown) {
       if (error instanceof Error) {
         this.logError("Error during login", error.message);
-        throw new Error(error.message || "An error occurred during login.");
+        throw new Error(error.message);
       }
       this.logError("Unknown error during login", error);
       throw new Error("An unknown error occurred during login.");

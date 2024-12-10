@@ -27,8 +27,7 @@ describe("Register Component", () => {
 
   it("shows modal with 'Please enter a valid email address.' for invalid email", async () => {
     setup();
-  
-    // Fill in valid name and passwords but invalid email
+
     fireEvent.change(screen.getByLabelText("Full Name"), {
       target: { value: "Test User" },
     });
@@ -41,20 +40,17 @@ describe("Register Component", () => {
     fireEvent.change(screen.getByLabelText("Confirm Password"), {
       target: { value: "password123" },
     });
-  
+
     fireEvent.click(screen.getByRole("button", { name: "Register" }));
-  
-    // Wait for the modal message to appear
+
     await waitFor(() => {
       expect(screen.getByTestId("modal-message")).toHaveTextContent(
         "Please enter a valid email address.",
       );
     });
-  
-    // Ensure register function is NOT called
+
     expect(authService.register).not.toHaveBeenCalled();
   });
-  
 
   it("displays validation error for mismatched passwords", async () => {
     setup();
@@ -188,11 +184,11 @@ describe("Register Component", () => {
   it("displays API error when registration fails", async () => {
     // Mock the API to reject with an error
     (authService.register as jest.Mock).mockRejectedValue(
-      new Error("An error occurred during registration.")
+      new Error("An error occurred during registration."),
     );
-  
+
     setup();
-  
+
     // Fill in valid form fields
     fireEvent.change(screen.getByLabelText("Full Name"), {
       target: { value: "Test User" },
@@ -206,23 +202,22 @@ describe("Register Component", () => {
     fireEvent.change(screen.getByLabelText("Confirm Password"), {
       target: { value: "password123" },
     });
-  
+
     // Submit the form
     fireEvent.click(screen.getByRole("button", { name: "Register" }));
-  
+
     // Debug DOM state
     console.log(screen.debug());
-  
+
     // Wait for the modal to appear with the error message
     await waitFor(() => {
       expect(
         screen.getByText((content) =>
-          content.includes("An error occurred during registration.")
-        )
+          content.includes("An error occurred during registration."),
+        ),
       ).toBeInTheDocument();
     });
   });
-  
 
   it("handles unknown errors gracefully", async () => {
     (authService.register as jest.Mock).mockRejectedValueOnce("Unknown error");

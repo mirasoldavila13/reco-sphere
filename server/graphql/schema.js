@@ -1,34 +1,44 @@
 /**
  * GraphQL Schema for User Authentication
  *
- * This file defines the GraphQL schema and resolvers for user authentication, including
- * registering new users and managing authentication tokens.
+ * This file defines the GraphQL schema and resolvers for managing user authentication,
+ * including user registration, login, and data retrieval. It integrates securely with
+ * the MongoDB database to handle user credentials and authentication tokens.
  *
  * Key Features:
- * - User Registration: Allows users to register by providing name, email, and password.
- * - JWT Token Generation: Issues a JWT for stateless authentication after successful registration.
- * - Secure Password Storage: Hashes passwords using bcrypt before storing them in the database.
- * - Fetch User Data: Provides queries to retrieve all users or specific users by ID.
+ * - **User Registration**: Allows new users to register by providing name, email, and password.
+ *   Passwords are securely hashed using bcrypt before being stored in the database.
+ * - **User Login**: Validates user credentials (email and password) and generates a JWT
+ *   token for stateless authentication upon successful login.
+ * - **JWT Token Generation**: Provides stateless authentication by issuing signed JWT tokens
+ *   for both registration and login operations.
+ * - **Data Retrieval**: Enables fetching all users or a specific user by ID, excluding sensitive
+ *   fields like passwords for security purposes.
  *
  * Components:
- * - `typeDefs`: Defines the GraphQL types, inputs, queries, and mutations.
- * - `resolvers`: Implements the logic for the GraphQL operations, including database interactions.
+ * - `typeDefs`: Defines GraphQL schema types, queries, and mutations for authentication.
+ * - `resolvers`: Implements the logic for GraphQL operations, including validation and secure
+ *   data handling.
  *
  * Dependencies:
- * - `apollo-server-express`: Provides GraphQL functionality and middleware for Express.
- * - `bcrypt`: For hashing passwords securely before saving them to the database.
- * - `jsonwebtoken`: For generating and verifying JWTs to enable secure authentication.
- * - `User`: Mongoose model for interacting with the MongoDB User collection.
+ * - `apollo-server-express`: Integrates GraphQL with an Express server.
+ * - `apollo-server-errors`: Handles error types and structured error responses.
+ * - `bcrypt`: Hashes passwords securely for storage and performs comparison for authentication.
+ * - `jsonwebtoken`: Signs and verifies JWT tokens for secure, stateless user sessions.
+ * - `User`: Mongoose model for interacting with the MongoDB user collection.
  *
  * Queries:
- * - `getAllUsers`: Fetches all users in the database, excluding their passwords.
- * - `getUserById`: Fetches a specific user's profile by their ID, excluding the password.
+ * - **`getAllUsers`**: Fetches all users from the database, excluding sensitive fields like passwords.
+ * - **`getUserById`**: Fetches a specific user's profile by ID while excluding sensitive data.
  *
  * Mutations:
- * - `registerUser`: Registers a new user, hashes their password, and issues a JWT.
+ * - **`registerUser`**: Registers a new user by validating input, hashing their password, storing
+ *   the data in the database, and issuing a JWT token.
+ * - **`loginUser`**: Authenticates a user by validating their credentials and issuing a JWT token.
  */
 
 import { gql } from "apollo-server-express";
+import { ApolloError } from "apollo-server-errors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
@@ -51,6 +61,11 @@ const typeDefs = gql`
     password: String!
   }
 
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
   type Query {
     getAllUsers: [User!]! # Fetch all users
     getUserById(id: ID!): User # Fetch a user by their ID
@@ -58,6 +73,7 @@ const typeDefs = gql`
 
   type Mutation {
     registerUser(input: RegisterInput!): AuthPayload!
+    loginUser(input: LoginInput!): AuthPayload!
   }
 `;
 
@@ -129,6 +145,70 @@ const resolvers = {
           email: newUser.email,
         },
       };
+    },
+
+    // Resolver to handle user login
+    loginUser: async (_, { input }) => {
+      const { email, password } = input;
+
+      // Input validation
+      if (!email || !password) {
+        throw new ApolloError("All fields are required.", "BAD_USER_INPUT");
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        throw new ApolloError(
+          "Please provide a valid email address.",
+          "BAD_USER_INPUT",
+        );
+      }
+
+      // Check if the user exists (moved out of the try block)
+      const existingUser = await User.findOne({ email });
+      if (!existingUser) {
+        throw new ApolloError(
+          "User not found. Please sign up first.",
+          "USER_NOT_FOUND",
+        );
+      }
+
+      try {
+        // Compare the provided password with the stored hashed password
+        const isPasswordValid = await bcrypt.compare(
+          password,
+          existingUser.password,
+        );
+        if (!isPasswordValid) {
+          throw new ApolloError("Invalid email or password.", "UNAUTHORIZED");
+        }
+
+        // Generate a JWT token
+        const token = jwt.sign(
+          {
+            id: existingUser._id,
+            email: existingUser.email,
+            name: existingUser.name,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: "1h" },
+        );
+
+        return {
+          token,
+          user: {
+            id: existingUser._id,
+            name: existingUser.name,
+            email: existingUser.email,
+          },
+        };
+      } catch (error) {
+        console.error("Error during login:", error.message);
+        throw new ApolloError(
+          "Failed to login. Please try again later.",
+          "INTERNAL_SERVER_ERROR",
+        );
+      }
     },
   },
 };

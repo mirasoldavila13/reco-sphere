@@ -23,6 +23,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import LandingPage from "./pages/LandingPage";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route element={<PublicRoute />}>
             <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
           </Route>
 
           {/* Protected Routes */}

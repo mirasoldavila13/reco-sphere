@@ -82,9 +82,9 @@ describe("Navbar Component", () => {
     const mobileMenu = screen.getByRole("list");
     expect(mobileMenu).toBeInTheDocument();
 
-    const loginLink = screen.getByRole("link", { name: /login/i });
+    const loginLinks = screen.getAllByRole("link", { name: /login/i });
     const signUpLink = screen.getByRole("link", { name: /sign up/i });
-    expect(loginLink).toBeInTheDocument();
+    expect(loginLinks.length).toBeGreaterThan(0);
     expect(signUpLink).toBeInTheDocument();
   });
 

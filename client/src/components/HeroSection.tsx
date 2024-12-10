@@ -1,3 +1,33 @@
+/**
+ * HeroSection Component
+ *
+ * The `HeroSection` component serves as the introductory section of the application,
+ * featuring a visually captivating background collage of trending movie and TV show posters,
+ * fetched from the TMDb API. It aims to immediately engage users with a dynamic visual experience
+ * while providing key action buttons to navigate to registration or learn more about the platform.
+ *
+ * Features:
+ * - **Dynamic Collage Background**: Displays a grid of trending movie and TV show posters.
+ *   - Posters are fetched dynamically from the TMDb API.
+ *   - Fallback logic ensures no empty or broken images are displayed.
+ * - **Responsive Design**: Fully responsive layout with appropriate scaling for different screen sizes.
+ * - **Gradient Overlay**: Enhances text readability over the collage background.
+ * - **Action-Oriented Content**:
+ *   - "Get Started" button redirects users to the registration page.
+ *   - "Learn More" button serves as a placeholder for additional informational content.
+ *
+ * State Management:
+ * - `posterUrls`: Array of poster URLs fetched from the TMDb API.
+ *
+ * Lifecycle:
+ * - Uses `useEffect` to fetch data from the TMDb API when the component mounts.
+ *
+ * Dependencies:
+ * - React Router's `Link` component for navigation.
+ * - Axios for API calls.
+ * - TailwindCSS and DaisyUI for styling.
+ */
+
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -69,7 +99,7 @@ const HeroSection = () => {
           </p>
           <div className="space-x-4">
             <Link
-              to="#"
+              to="/register"
               className="btn btn-primary btn-lg shadow-md hover:shadow-lg"
             >
               Get Started

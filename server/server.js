@@ -83,7 +83,7 @@ app.use(
 // Middleware for REST and GraphQL
 app.use(
   cors({
-    origin: "http://localhost:3000", // Only your React app
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),

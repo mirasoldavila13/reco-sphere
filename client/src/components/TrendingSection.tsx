@@ -1,3 +1,32 @@
+/**
+ * TrendingSection Component
+ *
+ * This component is designed to display trending movies and TV shows fetched from the TMDB API. It dynamically renders the content in a grid layout.
+ *
+ * Features:
+ * - Fetches trending content and genre information from the TMDB API endpoints.
+ * - Maps genre IDs to their respective names for better readability.
+ * - Handles loading and error states with user-friendly messages.
+ * - Utilizes TailwindCSS for a responsive and visually appealing UI.
+ * - Implements hover effects for better interactivity.
+ *
+ * Props and State:
+ * - `trendingItems`: Stores the list of trending items fetched from the TMDB API.
+ * - `movieGenres` and `tvGenres`: Maps of genre IDs to genre names for movies and TV shows.
+ * - `loading`: Boolean state to indicate data fetching progress.
+ * - `error`: Stores any error messages encountered during API calls.
+ *
+ * Notes:
+ * - This component is styled using TailwindCSS and DaisyUI.
+ * - It ensures responsiveness for various screen sizes (mobile, tablet, desktop).
+ * - Includes fallback handling for missing data (e.g., missing images or genres).
+ *
+ * Prerequisites:
+ * - The `/api/trending` endpoint fetches trending movies and TV shows from TMDB.
+ * - The `/api/genres` endpoint fetches genre mappings from TMDB.
+ * - Fallback image is stored locally for items missing poster paths.
+ */
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { TrendingItem, TrendingResponse, GenreResponse } from "../types";

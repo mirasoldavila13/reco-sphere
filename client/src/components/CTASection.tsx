@@ -1,3 +1,26 @@
+/**
+ * CTASection Component
+ *
+ * This component renders a visually appealing call-to-action (CTA) section designed to encourage users
+ * to take the next step, such as signing up or engaging with the platform. It includes:
+ *
+ * - A responsive design using TailwindCSS to ensure it looks great on all screen sizes.
+ * - A gradient background to draw attention to the section.
+ * - A prominent call-to-action button with hover effects for better user engagement.
+ *
+ * Features:
+ * - Eye-catching heading with highlighted text for emphasis.
+ * - Supporting text to communicate the value proposition.
+ * - "Get Started" button with animation effects for a modern, interactive feel.
+ *
+ * Prerequisites:
+ * - TailwindCSS must be set up for styling.
+ * - DaisyUI is used for button styling.
+ *
+ * Usage:
+ * - Place this component on the homepage or any relevant page to prompt user engagement.
+ */
+
 const CTASection = () => {
   return (
     <section

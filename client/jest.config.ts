@@ -13,6 +13,15 @@ const config: Config = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
   testMatch: ["**/*.test.ts", "**/*.test.tsx"],
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+  collectCoverage: true, // Enable coverage collection
+  coverageThreshold: {
+    global: {
+      statements: 90,
+      branches: 70,
+      functions: 90,
+      lines: 90,
+    },
+  },
 };
 
 export default config;

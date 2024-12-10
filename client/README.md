@@ -22,7 +22,7 @@ Modern users face a paradox of choice when it comes to selecting movies and TV s
 
 ### Frontend
 
-- **Technology**: React, Vite, TailwindCSS, DaisyUI.
+- **Technology**: React, Vite, TypeScript, TailwindCSS, DaisyUI.
 - **User Authentication**:
   - Secure registration and login with JWT-based session management.
 - **Personalized Dashboard**:
@@ -81,6 +81,19 @@ Modern users face a paradox of choice when it comes to selecting movies and TV s
   - Static code analysis to maintain quality.
   - Artifact storage for build outputs.
 
+### MongoDB Integration in CI/CD
+
+- Leveraged GitHub Actions to spin up a MongoDB container for testing during the CI pipeline.
+- Configured a `services` section to ensure MongoDB is available for backend tests:
+  ```yaml
+  services:
+    mongodb:
+      image: mongo:5.0
+      ports:
+        - 27017:27017
+  ```
+- This setup provides an isolated, disposable database environment during CI runs, ensuring consistency and repeatability for backend tests.
+
 ### Deployment
 
 - Hosted on **Render**, deploying:
@@ -93,15 +106,16 @@ Modern users face a paradox of choice when it comes to selecting movies and TV s
 
 ## Technical Stack
 
-| **Category**   | **Technology**                                         |
-| -------------- | ------------------------------------------------------ |
-| Frontend       | React, Vite, TailwindCSS, DaisyUI                      |
-| Backend        | Node.js, Express.js, GraphQL (Apollo Server)           |
-| Database       | MongoDB, Mongoose                                      |
-| Microservices  | Spring Boot                                            |
-| APIs           | TMDb, OMDb, TasteDive                                  |
-| DevOps/Hosting | GitHub Actions, Render                                 |
-| Testing        | Jest, Cypress, JUnit, Mockito, MockMvc, Testcontainers |
+| **Category**     | **Technology**                                         |
+| ---------------- | ------------------------------------------------------ |
+| Frontend         | React, Vite, TypeScript, TailwindCSS, DaisyUI          |
+| Backend          | Node.js, Express.js, GraphQL (Apollo Server)           |
+| Database         | MongoDB, Mongoose                                      |
+| Microservices    | Spring Boot                                            |
+| APIs             | TMDb, OMDb, TasteDive                                  |
+| DevOps/Hosting   | GitHub Actions, Render                                 |
+| Testing          | Jest, Cypress, JUnit, Mockito, MockMvc, Testcontainers |
+| Containerization | Docker                                                 |
 
 ---
 

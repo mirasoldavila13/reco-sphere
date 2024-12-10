@@ -39,6 +39,9 @@ import trendingRoute from "./routes/api/trending.js";
 import genresRoute from "./routes/api/genres.js";
 import popularRoute from "./routes/api/popular.js";
 import authRoutes from "./routes/authRoutes.js";
+import favoritesRoutes from "./routes/api/favorites.js";
+import ratingsRoutes from "./routes/api/favorites.js";
+import watchlistRoutes from "./models/Watchlist.js";
 import morgan from "morgan";
 import winston from "winston";
 
@@ -102,6 +105,9 @@ app.use("/api/trending", trendingRoute);
 app.use("/api/genres", genresRoute);
 app.use("/api/popular", popularRoute);
 app.use("/api/auth", authRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/watchlist", watchlistRoutes);
+app.use("/api/ratings", ratingsRoutes);
 
 // Initialize Apollo Server
 async function startServer() {

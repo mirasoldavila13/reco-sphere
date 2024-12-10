@@ -20,7 +20,7 @@ import mongoose from "mongoose";
 /**
  * Connects to MongoDB using Mongoose.
  *
- * @param {string} MONGODB_URI - MongoDB connection string.
+ * @param {string} MONGODB_URI- MongoDB connection string.
  * @throws Will throw an error if the connection fails.
  */
 const connectDB = async (MONGODB_URI) => {

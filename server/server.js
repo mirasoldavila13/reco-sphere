@@ -40,8 +40,8 @@ import genresRoute from "./routes/api/genres.js";
 import popularRoute from "./routes/api/popular.js";
 import authRoutes from "./routes/authRoutes.js";
 import favoritesRoutes from "./routes/api/favorites.js";
-import ratingsRoutes from "./routes/api/favorites.js";
-import watchlistRoutes from "./models/Watchlist.js";
+import ratingsRoutes from "./routes/api/ratings.js";
+import watchlistRoutes from "./routes/api/watchlist.js";
 import morgan from "morgan";
 import winston from "winston";
 
@@ -119,7 +119,7 @@ async function startServer() {
       typeDefs,
       resolvers,
       context: ({ req }) => {
-        const token = req.headers.authorization?.split("")[1]; // Extract Bearer token
+        const token = req.headers.authorization?.split(" ")[1]; // Extract Bearer token
         if (token) {
           try {
             const user = jwt.verify(token, process.env.JWT_SECRET);

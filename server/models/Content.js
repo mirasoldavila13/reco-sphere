@@ -1,18 +1,86 @@
 /**
  * Content Model
  *
- * This module defines the schema and model for storing content information in the MongoDB database.
- * Content can represent movies, TV shows, or other media, with metadata for rich descriptions.
+ * This module defines the MongoDB schema and model for managing content items,
+ * including movies, TV shows, and other media. It supports efficient storage,
+ * retrieval, and updates of metadata-rich content records.
  *
  * Key Features:
- * - Includes validation for required fields like `title`, `slug`, and `genre`.
- * - Supports flexible metadata storage (e.g., external IDs, runtime, description).
- * - Uses Mongoose timestamps to track when records are created or updated.
- * - Implements indexing for efficient querying by `title` and `genre`.
+ * - **Field Validation**:
+ *   - Ensures critical fields like `title`, `slug`, and `genre` are mandatory.
+ *   - Implements validation rules for `genre` to require at least one genre.
+ * - **Metadata Handling**:
+ *   - Allows flexible storage of additional information, such as external IDs,
+ *     release dates, runtimes, and descriptions.
+ * - **Robust Timestamps**:
+ *   - Tracks creation and last modification dates using Mongoose's `timestamps` feature.
+ * - **Efficient Querying**:
+ *   - Uses MongoDB indexing to optimize lookups by `title` and `genre`.
+ * - **Soft Deletion**:
+ *   - Includes an `isDeleted` field to support soft-deletion patterns without
+ *     permanently removing records.
  *
- * Usage:
- * 1. Import this model into your services or controllers for CRUD operations.
- * 2. Use it to save, retrieve, update, or delete content records in the database.
+ * Schema Details:
+ * - **Fields**:
+ *   - `title` (String, required): The title of the content, with a max length of 200 characters.
+ *   - `slug` (String, required, unique): A URL-friendly identifier for the content.
+ *   - `genre` (Array of Strings, required): Categories such as "Action" or "Drama"; must include at least one.
+ *   - `rating` (Number, optional): User or system-provided rating, from 0 to 10 (default: 0).
+ *   - `metadata` (Object, optional): Additional descriptive fields:
+ *     - `externalId` (String): Links to external systems (e.g., TMDB ID).
+ *     - `releaseDate` (Date): Content release date.
+ *     - `runtime` (Number): Duration in minutes.
+ *     - `description` (String): Textual description or summary.
+ *   - `isDeleted` (Boolean, default: false): Indicates soft-deleted records.
+ * - **Indexing**:
+ *   - Indexed by `title` and `genre` for improved performance when filtering or searching.
+ * - **Timestamps**:
+ *   - Automatically includes `createdAt` and `updatedAt` fields.
+ *
+ * Use Cases:
+ * - Manage a catalog of media items for applications like streaming platforms or recommendation engines.
+ * - Dynamically filter and retrieve content based on genre, rating, or metadata.
+ * - Support soft-deletion workflows to retain historical data for audit purposes.
+ *
+ * Security and Best Practices:
+ * - Use the `slug` field for constructing SEO-friendly URLs or unique content references.
+ * - Leverage `isDeleted` for non-destructive delete operations, avoiding permanent data loss.
+ * - Ensure proper input sanitation and validation at the service/controller level for user-provided data.
+ *
+ * Example Usage:
+ * ```javascript
+ * import Content from './models/Content.js';
+ *
+ * // Create a new content item
+ * const newContent = new Content({
+ *   title: "Inception",
+ *   slug: "inception",
+ *   genre: ["Sci-Fi", "Thriller"],
+ *   rating: 8.8,
+ *   metadata: {
+ *     externalId: "tt1375666",
+ *     releaseDate: "2010-07-16",
+ *     runtime: 148,
+ *     description: "A thief who steals corporate secrets...",
+ *   },
+ * });
+ * await newContent.save();
+ *
+ * // Query content by genre
+ * const sciFiMovies = await Content.find({ genre: "Sci-Fi", isDeleted: false });
+ *
+ * // Soft-delete content
+ * await Content.findByIdAndUpdate(contentId, { isDeleted: true });
+ * ```
+ *
+ * Technologies:
+ * - **Mongoose**: Provides a schema-based solution to model application data.
+ * - **MongoDB**: Offers scalable and flexible database storage for structured and semi-structured data.
+ *
+ * Future Enhancements:
+ * - Add support for additional indexing fields, such as `releaseDate` or `rating`.
+ * - Include dynamic tagging for enhanced search capabilities.
+ * - Integrate with external APIs to fetch or sync metadata.
  */
 
 import mongoose from "mongoose";

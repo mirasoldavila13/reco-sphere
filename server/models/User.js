@@ -1,20 +1,92 @@
 /**
  * User Model
  *
- * This module defines the schema and model for storing user-related data
- * in the MongoDB database. It includes fields for user credentials,
- * preferences, and usage history, along with validations to ensure
- * data integrity and consistency.
+ * This module defines the schema and model for storing and managing user-related data
+ * in the MongoDB database. It is a core component for user authentication, profile management,
+ * and personalized content delivery systems.
  *
  * Key Features:
- * - Stores essential user information like name, email, and password.
- * - Supports customizable user preferences and content history.
- * - Implements validation for fields to maintain data quality.
- * - Automatically manages creation and update timestamps.
+ * - **User Credentials**:
+ *   - Stores user authentication information such as name, email, and hashed password.
+ *   - Enforces strong validation rules to maintain data integrity.
+ * - **Preferences and History**:
+ *   - Tracks user-specific preferences and their interaction history with content.
+ *   - Designed for extensibility to support personalized recommendations and engagement analytics.
+ * - **Data Validation**:
+ *   - Ensures proper formatting for fields like email and password.
+ *   - Protects against invalid or inconsistent data inputs.
+ * - **Automatic Timestamps**:
+ *   - Uses Mongoose's `timestamps` feature to manage record creation and update dates.
+ *
+ * Schema Details:
+ * - **Fields**:
+ *   - `name` (String, required): Stores the user's full name with validation for length and format.
+ *   - `email` (String, required): Unique email identifier for login, validated with a regex pattern.
+ *   - `password` (String, required): Stores the user's hashed password, ensuring security and validation for non-empty inputs.
+ *   - `preferences` (Array of Strings, optional): Tracks user-defined categories, genres, or tags of interest.
+ *   - `history` (Array of Strings, optional): Logs content IDs representing user interactions.
+ * - **Timestamps**:
+ *   - Automatically adds `createdAt` and `updatedAt` fields for lifecycle tracking.
  *
  * Usage:
- * 1. Import this model into services or controllers to manage user accounts.
- * 2. Use it to create, update, or query users within the database.
+ * - **Authentication**:
+ *   - Store and verify user credentials during login and registration workflows.
+ * - **Personalization**:
+ *   - Leverage `preferences` and `history` fields to tailor recommendations and user experiences.
+ * - **Analytics**:
+ *   - Analyze user behavior by querying the `history` field for trends and engagement metrics.
+ *
+ * Example Use Cases:
+ * ```javascript
+ * import User from './models/User.js';
+ *
+ * // Create a new user
+ * const newUser = new User({
+ *   name: "Jane Doe",
+ *   email: "jane.doe@example.com",
+ *   password: hashedPassword, // Password should be hashed before saving
+ *   preferences: ["Sci-Fi", "Action"],
+ *   history: ["content123", "content456"],
+ * });
+ * await newUser.save();
+ *
+ * // Find a user by email
+ * const user = await User.findOne({ email: "jane.doe@example.com" });
+ *
+ * // Update user preferences
+ * await User.findByIdAndUpdate(user._id, { $set: { preferences: ["Drama", "Mystery"] } });
+ *
+ * // Delete a user
+ * await User.findByIdAndDelete(user._id);
+ * ```
+ *
+ * Security and Best Practices:
+ * - **Password Security**:
+ *   - Always hash passwords before saving to the database (e.g., using `bcrypt`).
+ *   - Never expose password fields in queries or APIs.
+ * - **Validation**:
+ *   - Ensure the `email` field is unique and correctly formatted.
+ *   - Use strong regex patterns to validate emails and sanitize inputs.
+ * - **Data Integrity**:
+ *   - Use schema-level validation for `preferences` and `history` to prevent invalid data.
+ * - **Error Handling**:
+ *   - Handle `unique` index violations for `email` to provide meaningful feedback to users.
+ *
+ * Future Enhancements:
+ * - **Role-Based Access Control (RBAC)**:
+ *   - Extend the schema to include roles (e.g., "admin", "editor", "user") for advanced permissions.
+ * - **User Activity Tracking**:
+ *   - Add fields to log user login timestamps or IP addresses for security purposes.
+ * - **Data Encryption**:
+ *   - Encrypt sensitive fields like preferences or history if privacy compliance is required.
+ *
+ * Technologies:
+ * - **Mongoose**: Provides schema validation, indexing, and robust query capabilities.
+ * - **MongoDB**: Scales for large datasets of user profiles and interactions.
+ *
+ * Summary:
+ * The `User` model serves as a foundational layer for managing authentication, personalization, and user data.
+ * Its design ensures security, scalability, and extensibility for modern web applications.
  */
 
 import mongoose from "mongoose";

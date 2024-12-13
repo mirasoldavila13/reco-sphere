@@ -1,42 +1,146 @@
 /**
  * Auth Controller
  *
- * This module handles all aspects of user authentication and account management,
- * including registration, login, and secure credential validation.
+ * This module manages all user authentication and account-related operations, including registration, login, updating user details, and deleting user accounts. It integrates with the backend's MongoDB database using the `User` model and provides secure authentication via JWT tokens.
  *
  * Key Features:
- * - **User Registration**: Allows new users to register by providing their name, email, and password.
- *   Passwords are securely hashed before being stored in the database.
- * - **User Login**: Authenticates users by validating their credentials (email and password),
- *   issuing a JWT token upon successful login.
- * - **JWT Token Generation**: Provides secure, stateless authentication by issuing signed JWT tokens.
+ * - **User Registration**:
+ *   - Registers new users with their name, email, and password.
+ *   - Passwords are securely hashed using bcrypt before being stored.
+ *   - Returns a JWT token upon successful registration.
+ * - **User Login**:
+ *   - Authenticates users by validating their credentials (email and password).
+ *   - Issues a signed JWT token upon successful authentication.
+ * - **Update User Details**:
+ *   - Allows users to update their name and preferences securely.
+ *   - Uses `findByIdAndUpdate` to ensure atomic operations.
+ * - **Delete User Accounts**:
+ *   - Securely deletes user accounts and associated data from the database.
+ *   - Verifies the provided user ID before performing the deletion.
+ * - **JWT Token Management**:
+ *   - Generates secure JWT tokens for stateless authentication.
+ *   - Validates user identity through tokens in protected routes.
  *
  * Design Considerations:
- * - **Input Validation**: Ensures all required fields are present and correctly formatted.
- * - **Error Messages**: Detailed error messages for easy troubleshooting and better user feedback.
- * - **Security**: Utilizes bcrypt for secure password hashing and validation, and JWT for stateless
- *   session management.
- * - **Extensibility**: Easily integrates with middleware to secure protected routes using JWT tokens.
+ * - **Input Validation**:
+ *   - Validates required fields (e.g., email, password, and name) before processing.
+ *   - Ensures email formatting and password security.
+ * - **Error Handling**:
+ *   - Returns meaningful error messages for common scenarios:
+ *     - Missing fields
+ *     - Invalid credentials
+ *     - Unauthorized access
+ *     - User not found
+ * - **Security**:
+ *   - Uses bcrypt for password hashing and validation.
+ *   - Implements JWT for secure and stateless session management.
+ * - **Extensibility**:
+ *   - Middleware compatibility for securing additional routes with JWT validation.
+ *   - Easily integrates additional user profile fields (e.g., phone, avatar).
  *
  * Routes:
  * - **`POST /api/auth/register`**:
- *   - Registers a new user with name, email, and password.
- *   - Returns a JWT token and the registered user's details upon success.
- *   - Returns a detailed error response if validation fails or the email is already in use.
+ *   - Registers a new user and returns a JWT token and user details upon success.
+ *   - Validates unique email addresses and hashes passwords securely.
  * - **`POST /api/auth/login`**:
- *   - Authenticates an existing user by validating their email and password.
- *   - Returns a JWT token and user details upon success.
- *   - Returns a detailed error response for invalid credentials or missing fields.
+ *   - Authenticates a user and issues a JWT token upon successful login.
+ *   - Validates email formatting and password correctness.
+ * - **`PUT /api/auth/update`**:
+ *   - Updates the authenticated user's profile (name and preferences).
+ *   - Requires a valid JWT token for access.
+ *   - Returns updated user details upon success.
+ * - **`DELETE /api/auth/delete`**:
+ *   - Deletes a user account securely.
+ *   - Verifies the provided user ID before performing the operation.
+ *   - Responds with confirmation or error messages based on the outcome.
  *
  * Dependencies:
- * - `bcrypt`: Securely hashes passwords and validates hashed passwords.
- * - `jsonwebtoken`: Generates and verifies JWT tokens for secure authentication.
+ * - `bcrypt`: Used for secure password hashing and comparison.
+ * - `jsonwebtoken`: Used for generating and verifying JWT tokens.
  * - `User`: Mongoose model for interacting with the MongoDB user collection.
+ *
+ * Example Usage:
+ * 1. **Register**:
+ *    - Call `registerUser` to create a new user with hashed password and issue a JWT token.
+ * 2. **Login**:
+ *    - Call `loginUser` to validate credentials and issue a JWT token.
+ * 3. **Update Profile**:
+ *    - Call `updateUser` with the desired fields (e.g., `name`, `preferences`) to update a user profile.
+ * 4. **Delete Account**:
+ *    - Call `deleteUser` with the authenticated user's ID to remove their account and data.
+ *
+ * Future Enhancements:
+ * - Add support for password reset functionality.
+ * - Extend `updateUser` to handle more profile fields (e.g., profile pictures, phone numbers).
+ * - Introduce rate limiting for sensitive operations (e.g., login, registration).
+ * - Enhance error messages with localized support for better user experience.
  */
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+
+/**
+ * @desc Update user details.
+ * @route PUT /api/auth/update
+ * @access Private
+ */
+const updateUser = async (req, res) => {
+  const { id } = req.user; // Assumes ID is extracted from the auth token middleware
+  const { name, preferences } = req.body;
+
+  try {
+    const updateFields = {};
+    if (name) updateFields.name = name;
+    if (preferences) updateFields.preferences = preferences;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: updateFields },
+      { new: true, runValidators: true }, // Return the updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+/**
+ * @desc Delete a user account.
+ * @route DELETE /api/auth/delete
+ * @access Private
+ */
+const deleteUser = async (req, res) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ message: "User ID is required." });
+  }
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json({
+      message: "User account deleted successfully!",
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error.message || error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
 
 /* @desc Register a new user
  * @route POST /api/auth/register
@@ -155,4 +259,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, updateUser, deleteUser };

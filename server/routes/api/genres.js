@@ -1,17 +1,68 @@
 /**
  * Genre Routes
  *
- * This module provides API endpoints for retrieving movie and TV genres
- * from the TMDb API. It uses caching to improve performance and reduce
- * redundant API calls.
+ * This module provides a streamlined API for retrieving movie and TV genres from the TMDb API.
+ * It leverages caching mechanisms to optimize performance and reduce redundant API requests.
+ * Designed with scalability and error resilience in mind, it integrates logging for monitoring
+ * and debugging.
+ *
+ * Key Features:
+ * - **Fetch TMDb Genres**:
+ *   - Retrieves movie and TV genres from the TMDb API.
+ *   - Supports real-time updates by querying the TMDb API on cache expiration.
+ * - **Caching**:
+ *   - Implements `node-cache` to store genre data for 1 hour (configurable).
+ *   - Reduces API call volume and improves response times.
+ * - **Logging**:
+ *   - Uses `winston` for structured logging to file and console.
+ *   - Logs errors and runtime information for better observability.
+ * - **Concurrent Requests**:
+ *   - Fetches movie and TV genres simultaneously using `Promise.all` for improved efficiency.
  *
  * Endpoints:
- * - GET `/` - Retrieves movie and TV genres.
+ * - `GET /api/genres/`:
+ *   - Fetches movie and TV genres from the cache or TMDb API.
+ *   - Responds with JSON containing `movieGenres` and `tvGenres`.
  *
- * Features:
- * - Utilizes `axios` for API requests to TMDb.
- * - Implements caching with `node-cache` to store genres for 1 hour.
- * - Logs errors using `winston`.
+ * Middleware:
+ * - **Environment Configuration**:
+ *   - Loads environment variables using `dotenv`.
+ *   - Requires a valid `TMDB_ACCESS_TOKEN` in the `.env` file.
+ *
+ * Error Handling:
+ * - **Cache Errors**:
+ *   - If the cache is empty or expired, fetches fresh data from the TMDb API.
+ * - **API Errors**:
+ *   - Logs detailed error messages using `winston`.
+ *   - Returns a `500 Internal Server Error` response with a user-friendly message.
+ *
+ * Dependencies:
+ * - **`express`**: Framework for handling HTTP routes.
+ * - **`axios`**: Makes HTTP requests to the TMDb API.
+ * - **`node-cache`**: Implements in-memory caching for genre data.
+ * - **`winston`**: Facilitates structured logging for runtime and error tracking.
+ * - **`dotenv`**: Loads environment variables for secure API token management.
+ *
+ * Example Usage:
+ * ```javascript
+ * import express from "express";
+ * import genreRoutes from "./routes/genres.js";
+ *
+ * const app = express();
+ * app.use("/api/genres", genreRoutes);
+ *
+ * app.listen(3000, () => {
+ *   console.log("Server running on port 3000");
+ * });
+ * ```
+ *
+ * Future Enhancements:
+ * - **Localized Genres**:
+ *   - Add support for dynamic language selection via query parameters.
+ * - **Custom Cache TTL**:
+ *   - Allow configurable cache durations through environment variables.
+ * - **Extended TMDb Data**:
+ *   - Incorporate additional TMDb genre-related information or analytics.
  */
 
 import express from "express";

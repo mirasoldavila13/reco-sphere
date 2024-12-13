@@ -1,17 +1,64 @@
 /**
  * Popular Movies and TV Shows Routes
  *
- * This module provides API endpoints for retrieving popular movies
- * and TV shows from the TMDb API. It uses caching to improve
- * performance and reduce redundant API calls.
- *
- * Endpoints:
- * - GET `/movies` - Retrieves popular movies.
- * - GET `/tv` - Retrieves popular TV shows.
+ * Overview:
+ * This module defines API endpoints for fetching and caching popular movies and TV shows
+ * from the TMDb API. It is optimized for performance with in-memory caching and
+ * designed for scalability and fault tolerance in real-world applications.
  *
  * Features:
- * - Utilizes `axios` for API requests to TMDb.
- * - Implements caching with `node-cache` to store responses for 1 hour.
+ * - **Popular Movies**:
+ *   - Endpoint: `GET /api/popular/movies`
+ *   - Fetches a paginated list of popular movies from TMDb.
+ *   - Caches results in memory for 1 hour to reduce API call frequency.
+ * - **Popular TV Shows**:
+ *   - Endpoint: `GET /api/popular/tv`
+ *   - Fetches a paginated list of popular TV shows from TMDb.
+ *   - Utilizes the same caching mechanism for efficiency.
+ *
+ * Caching:
+ * - In-memory caching implemented with `node-cache`:
+ *   - Stores responses for a Time-To-Live (TTL) of 1 hour.
+ *   - Significantly reduces redundant requests to TMDb, lowering API rate limits usage.
+ *
+ * API Integration:
+ * - The module queries TMDb's `/movie/popular` and `/tv/popular` endpoints.
+ * - Pagination support can be extended by adding dynamic `page` query parameters.
+ *
+ * Error Handling:
+ * - Handles TMDb API failures gracefully:
+ *   - Logs error messages for debugging.
+ *   - Sends an HTTP 500 response with a descriptive error message.
+ * - Fallback mechanisms could be implemented for high availability (e.g., retries or backup data).
+ *
+ * Dependencies:
+ * - **`express`**: Provides HTTP routing for the module.
+ * - **`axios`**: Handles external API requests to TMDb.
+ * - **`node-cache`**: Implements fast in-memory caching for responses.
+ * - **`dotenv`**: Manages sensitive configuration data (e.g., API tokens).
+ *
+ * Usage Example:
+ * ```javascript
+ * import express from "express";
+ * import popularRoutes from "./routes/popular.js";
+ *
+ * const app = express();
+ * app.use("/api/popular", popularRoutes);
+ *
+ * app.listen(3000, () => {
+ *   console.log("Server running on port 3000");
+ * });
+ * ```
+ *
+ * Future Improvements:
+ * - **Pagination**:
+ *   - Enable dynamic pagination through query parameters (e.g., `?page=2`).
+ * - **Localization**:
+ *   - Add support for localized content with `language` query parameters.
+ * - **Extended Data Caching**:
+ *   - Implement distributed caching (e.g., Redis) for scalability in multi-instance deployments.
+ * - **Fallback Data**:
+ *   - Serve cached fallback data during API outages.
  */
 
 import express from "express";

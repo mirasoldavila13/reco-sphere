@@ -94,35 +94,74 @@
  * Its design ensures scalability, reliability, and alignment with modern user interaction patterns.
  */
 
-import mongoose from "mongoose";
+import Watchlist from "../models/Watchlist.js";
 
-const watchlistSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    tmdbId: {
-      type: String,
-      required: true,
-    },
-    mediaType: {
-      type: String,
-      enum: ["movie", "tv"],
-      required: true,
-    },
-    addedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  { timestamps: true },
-);
+/**
+ * Get all watchlist items for the authenticated user.
+ */
+export const getWatchlist = async (req, res) => {
+  try {
+    const watchlist = await Watchlist.find({ userId: req.user.id });
+    res.json(watchlist);
+  } catch (error) {
+    console.error("Error fetching watchlist:", error.message);
+    res.status(500).json({ error: "Failed to fetch watchlist." });
+  }
+};
 
-// Prevent duplicate watchlist items for the same user and content
-watchlistSchema.index({ userId: 1, tmdbId: 1 }, { unique: true });
+/**
+ * Add a new item to the user's watchlist.
+ */
+export const addToWatchlist = async (req, res) => {
+  const { tmdbId, mediaType } = req.body;
 
-const Watchlist = mongoose.model("Watchlist", watchlistSchema);
+  if (!tmdbId || !mediaType) {
+    return res
+      .status(400)
+      .json({ error: "tmdbId and mediaType are required." });
+  }
 
-export default Watchlist;
+  try {
+    // Check for duplicate entries
+    const existingItem = await Watchlist.findOne({
+      userId: req.user.id,
+      tmdbId,
+      mediaType,
+    });
+
+    if (existingItem) {
+      return res
+        .status(400)
+        .json({ error: "Item is already in the watchlist." });
+    }
+
+    const watchlistItem = await Watchlist.create({
+      userId: req.user.id,
+      tmdbId,
+      mediaType,
+    });
+
+    res.status(201).json(watchlistItem);
+  } catch (error) {
+    console.error("Error adding to watchlist:", error.message);
+    res.status(500).json({ error: "Failed to add to watchlist." });
+  }
+};
+
+/**
+ * Remove an item from the user's watchlist.
+ */
+export const removeFromWatchlist = async (req, res) => {
+  try {
+    const watchlistItem = await Watchlist.findByIdAndDelete(req.params.id);
+
+    if (!watchlistItem) {
+      return res.status(404).json({ error: "Watchlist item not found." });
+    }
+
+    res.json({ message: "Watchlist item removed." });
+  } catch (error) {
+    console.error("Error removing watchlist item:", error.message);
+    res.status(500).json({ error: "Failed to remove watchlist item." });
+  }
+};

@@ -1,31 +1,37 @@
 /**
  * HeroSection Component
  *
- * The `HeroSection` component serves as the introductory section of the application,
- * featuring a visually captivating background collage of trending movie and TV show posters,
- * fetched from the TMDb API. It aims to immediately engage users with a dynamic visual experience
- * while providing key action buttons to navigate to registration or learn more about the platform.
+ * Purpose:
+ * - Serves as the visually engaging introductory section of the platform.
+ * - Features a dynamic background collage of trending movie and TV show posters fetched from the TMDb API.
+ * - Provides clear calls to action (CTAs) for user engagement.
  *
- * Features:
- * - **Dynamic Collage Background**: Displays a grid of trending movie and TV show posters.
- *   - Posters are fetched dynamically from the TMDb API.
- *   - Fallback logic ensures no empty or broken images are displayed.
- * - **Responsive Design**: Fully responsive layout with appropriate scaling for different screen sizes.
- * - **Gradient Overlay**: Enhances text readability over the collage background.
- * - **Action-Oriented Content**:
- *   - "Get Started" button redirects users to the registration page.
- *   - "Learn More" button serves as a placeholder for additional informational content.
+ * Key Features:
+ * 1. **Dynamic Collage Background**:
+ *    - Fetches posters of popular movies and TV shows from the TMDb API.
+ *    - Implements fallback logic to ensure only valid images are displayed.
+ *    - Uses a 4x3 grid layout for a visually appealing arrangement.
+ * 2. **Gradient Overlay**:
+ *    - Adds a gradient overlay to improve text readability.
+ * 3. **Action-Oriented Content**:
+ *    - "Get Started" button navigates to the registration page.
+ *    - "Learn More" button can be configured for informational content.
+ * 4. **Responsive Design**:
+ *    - Fully optimized for different screen sizes using TailwindCSS.
  *
  * State Management:
- * - `posterUrls`: Array of poster URLs fetched from the TMDb API.
+ * - `posterUrls`: State to store the list of dynamically fetched poster URLs.
  *
  * Lifecycle:
- * - Uses `useEffect` to fetch data from the TMDb API when the component mounts.
+ * - `useEffect` triggers the API call on component mount to fetch data.
+ *
+ * Error Handling:
+ * - Logs errors to the console in case of API failures but ensures the app remains functional.
  *
  * Dependencies:
- * - React Router's `Link` component for navigation.
- * - Axios for API calls.
- * - TailwindCSS and DaisyUI for styling.
+ * - `axios` for API calls.
+ * - `react-router-dom` for navigation.
+ * - `TailwindCSS` for responsive styling.
  */
 
 import { Link } from "react-router-dom";

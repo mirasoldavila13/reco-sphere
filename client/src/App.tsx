@@ -24,7 +24,11 @@ import PublicRoute from "./components/PublicRoute";
 import LandingPage from "./pages/LandingPage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Credits from "./components/Credits";
 import Dashboard from "./pages/Dashboard";
+import FavoritesPage from "./pages/FavoritesPage";
+import ProfilePage from "./pages/ProfilePage";
+import ComingSoon from "./pages/ComingSoon";
 
 const App = () => {
   return (
@@ -33,6 +37,8 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/credit" element={<Credits />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
           <Route element={<PublicRoute />}>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
@@ -41,6 +47,11 @@ const App = () => {
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard/:userId" element={<Dashboard />} />
+            <Route
+              path="/dashboard/:userId/favorites"
+              element={<FavoritesPage />}
+            />
+            <Route path="/profile/:userId" element={<ProfilePage />} />
           </Route>
 
           {/* Catch-all Route */}

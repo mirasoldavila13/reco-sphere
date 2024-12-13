@@ -1,18 +1,38 @@
 /**
  * Footer Component
  *
- * The `Footer` component provides navigational links and useful information about the platform,
- * divided into four main sections:
- * 1. **Features**: Highlights core platform functionalities.
- * 2. **Resources**: Links to helpful documentation and guides.
- * 3. **Company**: Provides company-related information like About Us and Careers.
- * 4. **Stay Connected**: Links to the company's social media platforms.
+ * The `Footer` component serves as a centralized area for navigational links and general platform
+ * information. It is divided into multiple sections to ensure users can easily access relevant
+ * resources, learn about the company, and stay connected through social media.
  *
- * Features:
- * - **Responsive Design**: Adapts to different screen sizes with a grid layout.
- * - **Semantic Markup**: Uses semantic HTML tags for accessibility and better structure.
- * - **Dynamic Links**: Employs React Router's `Link` component for navigation.
- * - **Modern UI**: Styled using TailwindCSS for consistency with the platform's theme.
+ * Key Features:
+ * - **Navigational Links**:
+ *   - Organized into four sections: Features, Resources, Company, and Stay Connected.
+ *   - Links use React Router's `Link` component for seamless client-side navigation.
+ * - **Responsive Grid Design**:
+ *   - Adapts to various screen sizes using TailwindCSS's grid layout.
+ *   - Ensures optimal usability on mobile, tablet, and desktop devices.
+ * - **Semantic HTML**:
+ *   - Enhances accessibility by using semantic tags (`nav`, `section`, `h3`) and `aria-labelledby` attributes.
+ * - **Consistent Styling**:
+ *   - Matches the platform's theme with a neutral background and hover effects for interactivity.
+ * - **Footer Bottom Section**:
+ *   - Displays copyright information and links to Privacy Policy and Terms of Service.
+ *
+ * Design Considerations:
+ * - **Scalability**:
+ *   - New sections or links can be added easily by extending the current structure.
+ * - **Accessibility**:
+ *   - Utilizes semantic elements and meaningful link descriptions for screen readers.
+ * - **Responsive Design**:
+ *   - TailwindCSS's utility classes ensure the layout adjusts seamlessly across devices.
+ *
+ * Dependencies:
+ * - `react-router-dom`: Provides the `Link` component for navigation.
+ * - `TailwindCSS`: Offers utility classes for styling and responsiveness.
+ *
+ * Props:
+ * - None (currently self-contained and static).
  */
 
 import { Link } from "react-router-dom";
@@ -33,27 +53,27 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Personalized Recommendations
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Advanced Filtering Options
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Trending Movies & Shows
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Cross-Platform Sync
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Seamless API Integrations
                 </Link>
               </li>
@@ -67,27 +87,27 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   How It Works
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   API Documentation
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Support
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/credit" className="hover:text-primary">
                   Credit
                 </Link>
               </li>
@@ -101,22 +121,22 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Press
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Contact
                 </Link>
               </li>
@@ -130,22 +150,22 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Facebook
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Twitter
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   Instagram
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-primary">
+                <Link to="/coming-soon" className="hover:text-primary">
                   LinkedIn
                 </Link>
               </li>

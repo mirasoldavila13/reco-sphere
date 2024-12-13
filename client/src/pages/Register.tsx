@@ -1,19 +1,54 @@
 /**
  * Register Component
  *
- * A user interface for creating an account. Validates user input, interacts with the authentication
- * service, and redirects the user to their dashboard upon successful registration.
+ * This component facilitates user registration for the application, integrating with a GraphQL API
+ * and backend services to securely create new user accounts. It performs client-side validation,
+ * interacts with the backend, and handles user feedback effectively.
  *
- * Features:
- * - **Form Validation**: Ensures all required fields are correctly filled.
- * - **API Integration**: Sends user data to the backend for registration.
- * - **Error Handling**: Displays detailed error messages for failed registration attempts.
- * - **Redirects**: Navigates the user to `/dashboard/:userId` after successful registration.
+ * Application Context:
+ * - **GraphQL API**:
+ *   - The application features a GraphQL API with a Node.js and Express.js server.
+ *   - Supports queries and mutations for CRUD operations, including user registration.
+ * - **Auth Controller**:
+ *   - Handles user authentication and account management in `authController.js`.
+ *   - Utilizes bcrypt for password hashing and JWT for stateless authentication.
+ * - **Schema.js**:
+ *   - Defines the GraphQL `registerUser` mutation for creating users and returning JWT tokens.
+ * - **MongoDB with Mongoose**:
+ *   - Manages user data, ensuring secure storage and validation of credentials.
+ *
+ * Key Features:
+ * - **Form Validation**:
+ *   - Verifies required fields (name, email, password, confirm password).
+ *   - Ensures passwords match and enforces a minimum password length of 6 characters.
+ *   - Validates email format with a regular expression.
+ * - **GraphQL Integration**:
+ *   - Sends a `registerUser` mutation to the GraphQL API with input fields: name, email, password.
+ *   - Receives a JWT token upon successful registration and stores it locally.
+ * - **Error Handling**:
+ *   - Displays detailed error messages for invalid input or backend failures.
+ *   - Prevents submission if validation fails.
+ * - **User Feedback**:
+ *   - Success and error messages are displayed in a modal for clarity.
+ *   - Redirects the user to `/dashboard/:userId` on successful registration.
+ * - **Responsive Design**:
+ *   - Optimized for a variety of screen sizes using TailwindCSS and DaisyUI.
+ * - **Future Extensibility**:
+ *   - The form is designed to accommodate additional fields such as profile pictures, phone numbers,
+ *     or email verification in the future.
+ *
+ * Workflow:
+ * 1. User inputs their name, email, password, and confirm password.
+ * 2. Client-side validation ensures the data meets all requirements.
+ * 3. Data is sent to the backend using the `authService.register` function.
+ * 4. On success, a JWT token is stored, and the user is redirected to their dashboard.
+ * 5. On failure, appropriate error messages are displayed in a modal.
  *
  * Dependencies:
- * - `authService`: Handles registration logic and token storage.
- * - React Router's `Link` and `useNavigate` for navigation.
- * - TailwindCSS and DaisyUI for responsive and user-friendly design.
+ * - **authService**: Handles backend interaction for user registration.
+ * - **react-router-dom**: Manages navigation and route redirection.
+ * - **Navbar and Footer**: Provides consistent page layout across the application.
+ * - **TailwindCSS and DaisyUI**: Styles the form for a modern and responsive user interface.
  */
 
 import React, { useState } from "react";

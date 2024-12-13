@@ -6,12 +6,12 @@
  *
  * - A responsive design using TailwindCSS to ensure it looks great on all screen sizes.
  * - A gradient background to draw attention to the section.
- * - A prominent call-to-action button with hover effects for better user engagement.
+ * - Prominent call-to-action buttons with hover effects for better user engagement.
  *
  * Features:
  * - Eye-catching heading with highlighted text for emphasis.
  * - Supporting text to communicate the value proposition.
- * - "Get Started" button with animation effects for a modern, interactive feel.
+ * - "Sign Up" and "Get Started" buttons with links to registration and login routes respectively.
  *
  * Prerequisites:
  * - TailwindCSS must be set up for styling.
@@ -21,6 +21,7 @@
  * - Place this component on the homepage or any relevant page to prompt user engagement.
  */
 
+import { Link } from "react-router-dom";
 const CTASection = () => {
   return (
     <section
@@ -29,16 +30,35 @@ const CTASection = () => {
     >
       <div className="hero-content text-center text-white">
         <div className="max-w-lg mx-auto px-6">
+          {/* Main heading with highlighted text */}
           <h2 className="text-4xl font-extrabold mb-6">
             Ready to <span className="text-accent">Discover</span>?
           </h2>
+
+          {/* Supporting text */}
           <p className="text-lg mb-8 leading-relaxed">
             Sign up and unlock a world of personalized recommendations tailored
             just for you.
           </p>
-          <button className="btn btn-accent btn-lg transition-transform transform hover:scale-110 hover:shadow-xl">
-            Get Started
-          </button>
+
+          {/* Buttons for navigation */}
+          <div className="flex justify-center space-x-4">
+            {/* Link to Sign Up */}
+            <Link
+              to="/register"
+              className="btn btn-primary btn-lg transition-transform transform hover:scale-110 hover:shadow-xl"
+            >
+              Sign Up
+            </Link>
+
+            {/* Link to Login */}
+            <Link
+              to="/login"
+              className="btn btn-accent btn-lg transition-transform transform hover:scale-110 hover:shadow-xl"
+            >
+              Get Started
+            </Link>
+          </div>
         </div>
       </div>
     </section>

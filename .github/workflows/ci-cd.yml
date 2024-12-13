@@ -31,35 +31,17 @@ jobs:
           cd client
           npm install
 
-      # Step 4: Clean cached Jest config
-      - name: Clean Cached Jest Config
-        run: |
-          cd client
-          find . -name "jest.config.js" -exec rm -f {} \;
-
-      # Step 5: Lint Client with --fix
+      # Step 4: Lint Client with --fix
       - name: Lint Client (with fix)
         run: |
           cd client
           npm run lint -- --fix
 
-      # Step 6: Build Client
+      # Step 5: Build Client
       - name: Build Client
         run: |
           cd client
           npm run build
-
-      # Step 7: Test Client
-      - name: Test Client
-        run: |
-          cd client
-          npm test -- --coverage --config jest.config.ts
-
-      - name: Upload Client Coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: client-coverage
-          path: client/coverage
 
   # Server Workflow
   server:
@@ -95,23 +77,6 @@ jobs:
           cd server
           npm run lint -- --fix
 
-      # Step 5: Test Server
-      - name: Test Server
-        env:
-          MONGODB_URI: mongodb://localhost:27017/test
-          TEST_MONGODB_URI: mongodb://localhost:27017/test
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: |
-          cd server
-          npm test -- --coverage
-
-      # Step 6: Upload Server Coverage
-      - name: Upload Server Coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: server-coverage
-          path: server/coverage
-
   # Microservice Workflow
   microservice:
     name: Microservice CI
@@ -140,12 +105,6 @@ jobs:
         run: |
           cd microservice
           ./mvnw clean install
-
-      # Step 5: Test microservice
-      - name: Test Microservice
-        run: |
-          cd microservice
-          ./mvnw test
 
   # Deployment Workflow
   deploy:

@@ -49,7 +49,7 @@ import winston from "winston";
 dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4001;
 
 // Initialize Express app
 const app = express();

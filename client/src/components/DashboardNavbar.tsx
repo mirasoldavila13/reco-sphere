@@ -1,33 +1,54 @@
 /**
  * DashboardNavbar Component
  *
- * A navigation bar for the dashboard, providing quick access to the landing page and a logout option.
+ * This component provides a responsive and dynamic navigation bar for authenticated users
+ * within the dashboard section of the application. It ensures users can easily navigate
+ * between core features like the dashboard, favorites, and profile, while also providing
+ * logout functionality.
  *
  * Features:
- * - Displays the application logo as a clickable link to the landing page.
- * - Provides a logout button for authenticated users.
- * - Ensures secure logout by clearing the JWT token and redirecting the user to the landing page.
+ * - **Dynamic Route Detection**:
+ *   - Highlights and conditionally hides links to the currently active page.
+ * - **Authentication-Integrated Navigation**:
+ *   - Uses `authService` to fetch the user's details and manage authentication state.
+ * - **Logout Functionality**:
+ *   - Logs out the user, clears the session, and redirects to the homepage.
  *
- * Design:
- * - Minimalist and responsive design with TailwindCSS.
- * - Includes hover effects for better user experience.
+ * Design Considerations:
+ * - Tailwind CSS for responsive and consistent styling.
+ * - Conditional rendering ensures unnecessary links (e.g., the current page) are not displayed.
+ * - Minimalist design for intuitive navigation while maintaining branding consistency.
+ *
+ * Dependencies:
+ * - React Router:
+ *   - `useNavigate` for programmatic navigation.
+ *   - `useLocation` for detecting the current route.
+ * - `authService` for authentication-related utilities.
  */
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import authService from "../services/authService";
 
 const DashboardNavbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Handle logout
   const handleLogout = () => {
-    authService.logout(); // Clear the JWT token
-    navigate("/"); // Redirect to the landing page
+    authService.logout();
+    navigate("/");
   };
 
+  const user = authService.getProfile();
+  const currentPath = location.pathname;
+
+  // Determine current route to conditionally show navigation links
+  const isFavoritesPage = currentPath === `/dashboard/${user?.id}/favorites`;
+  const isProfilePage = currentPath === `/profile/${user?.id}`;
+  const isDashboardPage = currentPath === `/dashboard/${user?.id}`;
+
   return (
-    <nav className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center shadow-md">
-      {/* RecoSphere Logo Section */}
+    <nav className="bg-neutral text-white px-6 py-4 flex justify-between items-center shadow-md">
+      {/* Logo Section */}
       <div className="flex items-center">
         <Link to="/" className="flex items-center space-x-3">
           <h1 className="text-2xl font-bold">
@@ -37,8 +58,32 @@ const DashboardNavbar = () => {
         </Link>
       </div>
 
-      {/* Logout Button */}
-      <div>
+      {/* Navigation Links */}
+      <div className="flex items-center space-x-6">
+        {!isDashboardPage && (
+          <Link
+            to={`/dashboard/${user?.id}`}
+            className="text-sm hover:text-primary transition"
+          >
+            Dashboard
+          </Link>
+        )}
+        {!isFavoritesPage && (
+          <Link
+            to={`/dashboard/${user?.id}/favorites`}
+            className="text-sm hover:text-primary transition"
+          >
+            Favorites
+          </Link>
+        )}
+        {!isProfilePage && (
+          <Link
+            to={`/profile/${user?.id}`}
+            className="text-sm hover:text-primary transition"
+          >
+            Profile
+          </Link>
+        )}
         <button
           onClick={handleLogout}
           className="bg-red-500 px-4 py-2 rounded text-sm hover:bg-red-600"

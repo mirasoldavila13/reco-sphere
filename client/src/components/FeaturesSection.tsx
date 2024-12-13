@@ -1,23 +1,54 @@
 /**
  * FeaturesSection Component
  *
- * This component highlights the key features of the RecoSphere platform in a visually appealing layout.
- *
- * Key Features:
- * - **Personalized Recommendations**: Content tailored to individual preferences using algorithms.
- * - **Advanced Filtering**: Tools to sort by genre, rating, and more.
- * - **Seamless Integration**: Leverages external APIs like TMDb, OMDb, and TasteDive for enriched data.
+ * This component highlights the key features of the RecoSphere platform, focusing on its
+ * unique capabilities and user benefits. It is designed to be visually appealing and highly
+ * responsive, ensuring an engaging experience for users across different devices.
  *
  * Features:
- * - **Responsive Design**: Utilizes a grid layout that adapts to different screen sizes.
- * - **Dynamic Content**: Features are dynamically rendered from a pre-defined array.
- * - **Interactive Design**: Cards scale and highlight on hover for better user engagement.
- * - **TailwindCSS Styling**: Ensures consistency with the overall theme of the platform.
+ * - **Dynamic Rendering**:
+ *   - Utilizes a predefined array of feature data to dynamically render the feature cards.
+ *   - Ensures scalability as new features can be added without modifying the layout.
+ * - **Grid Layout**:
+ *   - Implements a responsive grid that adapts to various screen sizes.
+ *   - Displays one column on small screens, two columns on medium screens, and three columns on large screens.
+ * - **Hover Effects**:
+ *   - Includes scaling and shadow transitions for interactive feedback.
+ * - **Thematic Design**:
+ *   - Matches the application's color scheme with the use of TailwindCSS utility classes.
+ *
+ * Design Considerations:
+ * - **Responsive Design**:
+ *   - Optimized for mobile, tablet, and desktop views using TailwindCSS's grid system.
+ * - **User Engagement**:
+ *   - Incorporates hover animations to draw attention to each feature.
+ *   - Uses icons to represent features visually, enhancing comprehension.
+ * - **Scalability**:
+ *   - New features can be easily added to the `features` array without altering the layout or code structure.
+ *
+ * Dependencies:
+ * - TailwindCSS: For styling and responsiveness.
+ * - Icons: Representational emojis for simplicity and better visual communication.
+ *
+ * Props:
+ * - None (currently self-contained with a hardcoded list of features).
  */
 
 const FeaturesSection = () => {
   // Define the key features to be displayed in the section
   const features = [
+    {
+      title: "Trending Movies & Shows",
+      description:
+        "Stay updated with the latest and most popular content, curated for your interests.",
+      icon: "🔥", // Representational icon for the feature
+    },
+    {
+      title: "Cross-Platform Sync",
+      description:
+        "Access your favorites, watchlists, and preferences seamlessly across all your devices.",
+      icon: "🔄", // Representational icon for the feature
+    },
     {
       title: "Personalized Recommendations",
       description:
@@ -32,9 +63,14 @@ const FeaturesSection = () => {
     },
     {
       title: "Seamless Integration",
-      description:
-        "Enriched metadata powered by APIs like TMDb, OMDb, and TasteDive.",
+      description: "Enriched metadata powered by TMDb API.",
       icon: "🔗", // Representational icon for the feature
+    },
+    {
+      title: "Exclusive Features for Logged-in Users",
+      description:
+        "Logged-in users can add content to their favorites and enjoy a personalized experience.",
+      icon: "🔒", // Representational icon for the feature
     },
   ];
 

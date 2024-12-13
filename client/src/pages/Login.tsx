@@ -1,28 +1,89 @@
 /**
  * Login Component
  *
- * This component provides a user interface for logging into the application. It allows users
- * to enter their email and password, validates the input, and interacts with the authentication
- * service to authenticate the user. The component also handles error messages and loading states
- * for a seamless user experience.
+ * The `Login` component is designed to provide a user-friendly and secure interface for users
+ * to authenticate themselves into the RecoSphere platform. This component includes robust validation,
+ * error handling, and user feedback mechanisms to ensure a seamless login experience.
  *
- * Key Features:
- * - **Form Validation**: Ensures that both email and password fields are completed, and validates the email format.
- * - **Error Handling**: Displays clear error messages for invalid credentials, missing fields, or unexpected errors.
- * - **Throttling Login Attempts**: Locks the form after 5 failed login attempts and enforces a 30-second cooldown.
- * - **Loading Indicator**: Provides visual feedback during the login process with a spinner icon.
- * - **Modal Notifications**: Displays success or error messages in a modal after form submission.
- * - **JWT Authentication**: Relies on the `authService` to handle authentication and token storage.
+ * ============================
+ * **Key Features**
+ * ============================
+ * 1. **Form Validation**:
+ *    - Validates email and password fields for completeness and proper email format.
+ *    - Automatically focuses on invalid fields to guide the user.
  *
- * Design Considerations:
- * - **Accessibility**: Automatically focuses on fields with errors for better user experience.
- * - **Security**: Uses `authService` to handle tokens securely, avoiding exposure of sensitive information in the UI.
- * - **Scalability**: Provides a structure for adding more features like "Remember Me" or "Forgot Password".
+ * 2. **Error Handling**:
+ *    - Displays contextual error messages for:
+ *      - Invalid credentials.
+ *      - Missing or improperly formatted input.
+ *      - Unexpected server errors.
+ *    - Gracefully handles scenarios such as server unavailability.
  *
- * Dependencies:
- * - `authService`: Handles login requests and JWT token management.
- * - `react-router-dom`: Used for navigation after successful login.
- * - `Navbar` and `Footer`: Reusable components for consistent page layout.
+ * 3. **Login Throttling**:
+ *    - Restricts login attempts after 5 consecutive failures.
+ *    - Implements a 30-second cooldown before re-enabling login attempts.
+ *
+ * 4. **Loading State**:
+ *    - Provides visual feedback during the authentication process using a spinner icon.
+ *
+ * 5. **Modal Notifications**:
+ *    - Displays success or error messages in a modal dialog for better user feedback.
+ *
+ * 6. **JWT Authentication**:
+ *    - Relies on `authService` to securely handle login requests and store tokens.
+ *
+ * ============================
+ * **Dependencies**
+ * ============================
+ * - **authService**: Centralized authentication service for login requests and token handling.
+ * - **react-router-dom**: Used for seamless navigation to the dashboard after successful login.
+ * - **Navbar** and **Footer**: Reusable components to maintain consistent UI design.
+ *
+ * ============================
+ * **Component Behavior**
+ * ============================
+ * - Validates the user’s input on form submission.
+ * - Prevents further actions during ongoing login attempts (`isLoading` state).
+ * - Redirects authenticated users to their personalized dashboard.
+ * - Locks login functionality after excessive failed attempts to deter brute-force attacks.
+ *
+ * ============================
+ * **Design Principles**
+ * ============================
+ * - **Accessibility**:
+ *   - Focuses on invalid fields for better guidance.
+ *   - Uses descriptive labels and placeholders for inputs.
+ * - **Security**:
+ *   - Manages authentication securely via `authService`.
+ *   - Avoids exposing sensitive data in error messages.
+ * - **User Experience**:
+ *   - Provides clear feedback at every step of the login process.
+ *   - Incorporates retry limits and error messages to inform users of issues.
+ *
+ * ============================
+ * **Usage Example**
+ * ============================
+ * ```tsx
+ * import Login from "./Login";
+ *
+ * const App = () => {
+ *   return <Login />;
+ * };
+ *
+ * export default App;
+ * ```
+ *
+ * ============================
+ * **Future Enhancements**
+ * ============================
+ * 1. **Remember Me**:
+ *    - Allow users to stay logged in by persisting tokens securely.
+ * 2. **Social Login**:
+ *    - Integrate third-party authentication options (e.g., Google, Facebook).
+ * 3. **Forgot Password**:
+ *    - Add a flow to reset forgotten passwords.
+ * 4. **Captcha**:
+ *    - Include CAPTCHA to deter automated login attempts.
  */
 
 import React, { useState } from "react";

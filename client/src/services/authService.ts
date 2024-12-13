@@ -1,33 +1,84 @@
 /**
  * AuthService
  *
- * A client-side service for handling authentication operations such as registration, login,
- * token management, and user profile retrieval using GraphQL.
+ * A comprehensive client-side service for managing user authentication and account-related
+ * operations, built to integrate seamlessly with a GraphQL API and backend services.
  *
- * Features:
- * - **Registration**: Sends user details via GraphQL mutation and retrieves a JWT upon success.
- * - **Login**: Authenticates a user with their credentials using a GraphQL mutation and stores the returned JWT.
- * - **Token Management**: Handles secure storage, retrieval, and validation of the JWT token in `localStorage`.
- * - **Profile Retrieval**: Decodes the JWT token to extract the user's profile information, such as ID, email, and name.
- * - **Logout**: Clears the token from `localStorage` and updates the authentication state.
- * - **Session Validation**: Checks if the user is authenticated by validating the token.
+ * Application Context:
+ * - **GraphQL API**:
+ *   - The application features a GraphQL API built with Node.js and Express.js.
+ *   - Supports mutations for operations such as user registration, login, and profile updates.
+ * - **Backend Services**:
+ *   - Works with the `authController.js` for handling authentication and user management.
+ *   - Leverages bcrypt for secure password hashing and JWT for token-based authentication.
+ *   - Mongoose models manage user data within MongoDB.
+ * - **Integration with Frontend**:
+ *   - Provides utility functions for user authentication, token management, and profile handling.
+ *   - Simplifies interaction between frontend components and backend endpoints.
+ *
+ * Key Features:
+ * - **Registration**:
+ *   - Sends user details (name, email, password) via GraphQL mutation.
+ *   - Receives a JWT token and stores it in `localStorage`.
+ * - **Login**:
+ *   - Authenticates user credentials via GraphQL mutation.
+ *   - Stores the returned JWT token for session management.
+ * - **Profile Management**:
+ *   - Decodes the JWT token to extract user details (ID, email, name, preferences).
+ *   - Updates the user profile via the `updateUser` GraphQL mutation.
+ * - **Account Deletion**:
+ *   - Deletes user accounts by sending a request to the backend REST API.
+ * - **Token Management**:
+ *   - Securely stores and retrieves the JWT token from `localStorage`.
+ *   - Validates token expiration and ensures session integrity.
+ * - **Error Handling**:
+ *   - Comprehensive error logging for both GraphQL and REST API interactions.
+ *   - Displays detailed error messages for user-facing issues.
+ * - **Logout**:
+ *   - Clears the JWT token from `localStorage` to log the user out.
+ * - **Security**:
+ *   - Implements stateless authentication with JWT.
+ *   - Verifies token validity and expiry before granting access to secure operations.
+ * - **Extensibility**:
+ *   - Designed to accommodate additional fields (e.g., profile pictures, phone numbers) in user registration.
  *
  * Design Considerations:
- * - **Stateless Authentication**: Uses JWT for stateless authentication, ensuring scalability.
- * - **Error Handling**: Comprehensive error handling for backend and client-side validation.
- * - **Security**: Ensures secure password handling with backend validation and hashing.
- * - **Token Expiry Handling**: Automatically checks if the token has expired.
- *
- * Dependencies:
- * - `jwt-decode`: Decodes JWT tokens for extracting user information.
+ * - **Scalability**:
+ *   - Stateless design allows seamless scalability across distributed systems.
+ * - **Performance**:
+ *   - Efficient token decoding and validation.
+ *   - Reduced network overhead with consolidated GraphQL requests.
+ * - **Developer Experience**:
+ *   - Centralized error logging simplifies debugging.
+ *   - Intuitive API for frontend developers to manage authentication.
  *
  * Functions:
- * - `register`: Registers a new user and stores the JWT token.
- * - `login`: Authenticates a user and stores the JWT token.
- * - `getProfile`: Decodes and returns the user profile from the JWT token.
- * - `logout`: Clears the JWT token from localStorage.
- * - `isAuthenticated`: Verifies if the user is authenticated based on the token.
- * - `isTokenExpired`: Checks if a JWT token is expired.
+ * - **Core Operations**:
+ *   - `register`: Registers a new user and stores the JWT token.
+ *   - `login`: Authenticates a user and stores the JWT token.
+ *   - `getProfile`: Decodes and returns the user profile from the JWT token.
+ *   - `updateProfile`: Updates user details using the GraphQL `updateUser` mutation.
+ *   - `deleteProfile`: Deletes a user account using a REST API endpoint.
+ * - **Token Management**:
+ *   - `getToken`: Retrieves the JWT token from `localStorage`.
+ *   - `setToken`: Stores the JWT token in `localStorage`.
+ *   - `isTokenExpired`: Validates if the token is expired.
+ * - **Session Handling**:
+ *   - `logout`: Clears the stored JWT token.
+ *   - `isAuthenticated`: Checks if the user is logged in by validating the token.
+ *
+ * Dependencies:
+ * - **GraphQL**:
+ *   - Uses GraphQL mutations for core operations (`registerUser`, `loginUser`, `updateUser`).
+ * - **jwt-decode**:
+ *   - Decodes JWT tokens to extract user data and validate token expiration.
+ * - **REST API**:
+ *   - Integrates with REST endpoints for account deletion and other specific operations.
+ *
+ * Usage:
+ * 1. Import `AuthService` into frontend components for authentication-related operations.
+ * 2. Call methods like `register`, `login`, `getProfile`, or `updateProfile` as needed.
+ * 3. Utilize `isAuthenticated` to conditionally render protected routes or components.
  */
 
 import { JwtPayload, jwtDecode } from "jwt-decode";
@@ -38,6 +89,7 @@ declare module "jwt-decode" {
     email: string;
     name: string;
     exp?: number;
+    preferences?: string[];
   }
 }
 
@@ -48,6 +100,78 @@ interface UserData {
 }
 
 class AuthService {
+  async deleteProfile(userId: string): Promise<{ message: string }> {
+    const response = await fetch("/api/auth/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.getAuthToken()}`,
+      },
+      body: JSON.stringify({ id: userId }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to delete account.");
+    }
+
+    return result;
+  }
+
+  async updateProfile(updatedData: {
+    name?: string;
+    preferences?: string[];
+  }): Promise<void> {
+    try {
+      const token = this.getAuthToken();
+      if (!token) throw new Error("User is not authenticated."); // Handle missing token
+
+      const response = await fetch("/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Set token in Authorization header
+        },
+        body: JSON.stringify({
+          query: `
+            mutation UpdateUser($id: ID!, $input: UpdateUserInput!) {
+              updateUser(id: $id, input: $input) {
+                id
+                name
+                email
+                preferences
+              }
+            }
+          `,
+          variables: {
+            id: this.getProfile()?.id,
+            input: updatedData,
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.errors) {
+        const errorMessage =
+          result.errors?.[0]?.message || "Failed to update profile.";
+        throw new Error(errorMessage);
+      }
+
+      if (!result.data || !result.data.updateUser) {
+        throw new Error("Invalid response structure from the server.");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.logError("Error updating profile", { message: error.message });
+        throw new Error(error.message);
+      }
+      this.logError("Unknown error updating profile", error);
+      throw new Error("An unknown error occurred during profile update.");
+    }
+  }
+
   async register(userData: UserData): Promise<{
     token: string;
     user: { id: string; name: string; email: string };
@@ -178,6 +302,10 @@ class AuthService {
 
   private getToken(): string | null {
     return localStorage.getItem("jwtToken") || null;
+  }
+
+  getAuthToken(): string | null {
+    return this.getToken(); // Safely return the private token
   }
 
   private setToken(token: string): void {

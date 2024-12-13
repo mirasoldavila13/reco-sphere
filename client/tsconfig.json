@@ -26,7 +26,8 @@
     "postcss.config.js",
     "tailwind.config.js",
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "src/custom.d.ts"
   ],
   "exclude": [
     "node_modules",

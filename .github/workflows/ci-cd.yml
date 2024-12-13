@@ -111,25 +111,34 @@ jobs:
     name: Deployment CI/CD
     needs: [client, server, microservice]
     runs-on: ubuntu-latest
+
     steps:
       # Step 1: Checkout code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Placeholder Deployment for Frontend
-      - name: Deploy Client
+      # Frontend Deployment to Render
+      - name: Deploy Client to Render
         if: success()
         run: |
-          echo "Client deployment placeholder. Replace with actual deployment script."
+         echo "Triggering Render deployment for frontend"
+         curl -X POST -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"serviceId": "srv-frontend12345"}' \
+         https://api.render.com/v1/services/srv-frontend12345/deploys
 
-      # Placeholder Deployment for Server
-      - name: Deploy server
+      # Backend Deployment to Render
+      - name: Deploy Server to Render
         if: success()
         run: |
-          echo "Server deployment placeholder. Replace with actual deployment script."
+          echo "Triggering Render deployment for backend"
+          curl -X POST -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"serviceId": "srv-backend12345"}' \
+          https://api.render.com/v1/services/srv-backend12345/deploys
 
-      # Placeholder Deployment for Microservice
+      # Placeholder for Microservice Deployment
       - name: Deploy Microservice
         if: success()
         run: |
-          echo "Microservice deployment placeholder. Replace with actual deployment script."
+         echo "Microservice deployment placeholder. Replace with actual deployment script."
